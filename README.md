@@ -1,5 +1,5 @@
 # FRC 8775 Robotics - 2025 Code
-This repository maintains our robot's 2024 code.
+This repository maintains our robot's 2025 code.
 
 ## Necessary Software
 There is some software that you will need to work on the project. It is recommended that you install software as instructed in on WPILIB's [website](https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-2/wpilib-setup.html). This will setup the necessary tools for you to develop in vscode.
