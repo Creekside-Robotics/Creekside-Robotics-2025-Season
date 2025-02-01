@@ -13,6 +13,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+//import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -90,7 +91,7 @@ public class Drivetrain extends SubsystemBase{
   public void setModuleStates(double xSpeed, double ySpeed, double rot, boolean fieldRelative){
     SwerveModule[] modules = {this.m_frontLeft, this.m_frontRight, this.m_backLeft, this.m_backRight};
 
-    var states =
+    SwerveModuleState[] states =
         kinematics.toSwerveModuleStates(
             ChassisSpeeds.discretize(
                 fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getGyroAngle()): new ChassisSpeeds(xSpeed, ySpeed, rot), Constants.DrivetrainConstants.periodTime));

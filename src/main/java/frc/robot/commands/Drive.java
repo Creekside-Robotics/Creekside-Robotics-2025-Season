@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.Constants;
@@ -43,14 +42,10 @@ public class Drive extends Command {
   @Override
   public void execute() {
     double xVelocity = -xLimiter.calculate(MathUtil.applyDeadband(m_joystick.getY(), 0.1)) * Constants.DrivetrainConstants.maxVelocity;
-    
     double yVelocity = -yLimiter.calculate(MathUtil.applyDeadband(m_joystick.getX(), 0.1)) * Constants.DrivetrainConstants.maxVelocity;
-    
     double angVelocity = -rotLimiter.calculate(MathUtil.applyDeadband(m_joystick.getZ(), 0.1)) * Constants.DrivetrainConstants.maxAngularVelocity;
-    
-    ChassisSpeeds desiredSpeed = new ChassisSpeeds(xVelocity, yVelocity, angVelocity);
 
-    m_swerveDrive.setModuleStates(desiredSpeed);
+    m_swerveDrive.setModuleStates(xVelocity, yVelocity, angVelocity, true);
   }
 
   // Called once the command ends or is interrupted.

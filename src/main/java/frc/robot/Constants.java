@@ -23,6 +23,7 @@ public final class Constants {
   }
 
   public static class DeviceIds {
+    public static int driver1Port = 0;
     
     public static int fLSwerveDrive = 0;
     public static int fLSwerveTurn = 0;
@@ -50,9 +51,10 @@ public final class Constants {
     public static double backRightEncoderOffset = Math.toRadians(-88.330) + Math.PI / 2.0;
 
     public static double positionMultiplier = 1;
-    
+     
     public static Vector<N3> stateStandardDeviation = VecBuilder.fill(0.01, 0.01, 0.02);
     public static Vector<N3> visionStandardDeviation = VecBuilder.fill(0.5, 0.5, 1.0);
+    public static double periodTime = 0;
 
   }
 
