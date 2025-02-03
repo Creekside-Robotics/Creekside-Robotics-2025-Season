@@ -14,7 +14,8 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
-import com.revrobotics.CANSparkMax;
+
+
 
 public class SwerveModule {
   private static final double kWheelRadius = 0.0508;
@@ -25,8 +26,8 @@ public class SwerveModule {
       2 * Math.PI; // radians per second squared
 
   //Motor controllers and encoders
-  private final Spark m_driveMotor;
-  private final Spark m_turningMotor;
+  private final PWMSparkMax m_driveMotor;
+  private final PWMSparkMax m_turningMotor;
 
   private final Encoder m_driveEncoder;
   private final Encoder m_turningEncoder;
