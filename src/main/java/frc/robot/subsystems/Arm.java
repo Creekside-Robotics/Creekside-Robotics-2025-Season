@@ -4,18 +4,31 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+import com.revrobotics.servohub.ServoHub.ResetMode;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkMaxConfig;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
-public class AlgaeIntake extends SubsystemBase {
+public class Arm extends SubsystemBase {
   
-  PWMSparkMax baseMotor;
-  PWMSparkMax wheelMotor;
+  SparkMax leftGrabber;
+  SparkMax rightGrabber;
+  SparkMaxConfig config;
 
 
-  public AlgaeIntake() {
+  public Arm() {
+    rightGrabber = new SparkMax(Constants.DeviceIds.rightGrabber, MotorType.kBrushless);
+    leftGrabber = new SparkMax(Constants.DeviceIds.leftGrabber, MotorType.kBrushless);
     
+    config = new SparkMaxConfig();
+    config.inverted(false);
+    
+    //rightGrabber.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   /**
