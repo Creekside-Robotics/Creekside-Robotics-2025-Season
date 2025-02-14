@@ -4,15 +4,17 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.servohub.ServoHub.ResetMode;
+
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.Constants.DeviceIds;
+import frc.robot.Constants.ArmConstants;
 
 public class Arm extends SubsystemBase {
   
@@ -22,46 +24,30 @@ public class Arm extends SubsystemBase {
 
 
   public Arm() {
-    rightGrabber = new SparkMax(Constants.DeviceIds.rightGrabber, MotorType.kBrushless);
-    leftGrabber = new SparkMax(Constants.DeviceIds.leftGrabber, MotorType.kBrushless);
+    rightGrabber = new SparkMax(DeviceIds.rightGrabber, MotorType.kBrushless);
+    leftGrabber = new SparkMax(DeviceIds.leftGrabber, MotorType.kBrushless);
     
     config = new SparkMaxConfig();
     config.inverted(false);
+    config.idleMode(IdleMode.kBrake);
     
-    //rightGrabber.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    rightGrabber.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    config.inverted(true);
+    leftGrabber.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
-  /**
-   * Example command factory method.
-   *
-   * @return a command
-   */
-  public Command exampleMethodCommand() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return runOnce(
-        () -> {
-          /* one-time action goes here */
-        });
+  public void intake(){
+    rightGrabber.setVoltage(ArmConstants.intakeVoltage);
+    leftGrabber.setVoltage(-ArmConstants.intakeVoltage);
   }
 
-  /**
-   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
-   *
-   * @return value of some boolean subsystem state, such as a digital sensor.
-   */
-  public boolean exampleCondition() {
-    // Query some boolean state, such as a digital sensor.
-    return false;
+  public void outtake(){
+    rightGrabber.setVoltage(-ArmConstants.intakeVoltage);
+    leftGrabber.setVoltage(ArmConstants.intakeVoltage);
   }
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
-
-  @Override
-  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
+  public void stop(){
+    rightGrabber.setVoltage(0);
+    leftGrabber.setVoltage(0);
   }
 }

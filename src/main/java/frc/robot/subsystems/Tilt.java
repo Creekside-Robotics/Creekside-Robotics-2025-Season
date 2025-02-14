@@ -28,8 +28,7 @@ public class Tilt extends SubsystemBase {
   AbsoluteEncoder encoder;
 
   public Tilt(){
-    int id = DeviceIds.tilt;
-    this.mainMotor = new SparkMax(id, MotorType.kBrushless);
+    this.mainMotor = new SparkMax(DeviceIds.tilt, MotorType.kBrushless);
     this.mainConfig = new SparkMaxConfig();
 
     this.PIDController = mainMotor.getClosedLoopController();
