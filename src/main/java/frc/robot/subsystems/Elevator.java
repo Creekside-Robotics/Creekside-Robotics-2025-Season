@@ -4,64 +4,73 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.servohub.ServoHub.ResetMode;
+
+import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
-import edu.wpi.first.wpilibj2.command.Command;
+
+// import edu.wpi.first.math.MathUtil;
+// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Arm extends SubsystemBase {
+public class Elevator extends SubsystemBase {
   
-  SparkMax leftGrabber;
-  SparkMax rightGrabber;
-  SparkMaxConfig config;
+  SparkMax leftMotor;
+  SparkMax rightMotor;
+  SparkMaxConfig leftConfig;
+  SparkMaxConfig rightConfig;
+  SparkClosedLoopController rightPIDController;
+  SparkClosedLoopController leftPIDController;
+  AbsoluteEncoder encoder;
 
+  public Elevator(){
+    rightMotor = new SparkMax(Constants.DeviceIds.rightElevator, MotorType.kBrushless);
+    leftMotor = new SparkMax(Constants.DeviceIds.leftElevator, MotorType.kBrushless);
 
-  public Arm() {
-    rightGrabber = new SparkMax(Constants.DeviceIds.rightGrabber, MotorType.kBrushless);
-    leftGrabber = new SparkMax(Constants.DeviceIds.leftGrabber, MotorType.kBrushless);
-    
-    config = new SparkMaxConfig();
-    config.inverted(false);
-    
-    //rightGrabber.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    rightConfig = new SparkMaxConfig();
+    leftConfig = new SparkMaxConfig();
+
+    rightPIDController = rightMotor.getClosedLoopController();
+    leftPIDController = leftMotor.getClosedLoopController();
+
   }
 
-  /**
-   * Example command factory method.
-   *
-   * @return a command
-   */
-  public Command exampleMethodCommand() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return runOnce(
-        () -> {
-          /* one-time action goes here */
-        });
+  // @Override
+  // public void periodic() {
+  //   setVoltage(
+  //     MathUtil.clamp(
+  //       encoder.getPosition(), 
+  //       -TiltConstants.maxVoltage, 
+  //       TiltConstants.maxVoltage
+  //     ) + TiltConstants.kS * Math.sin(encoder.getPosition() - TiltConstants.hangingAngle)
+  //   );
+  //   SmartDashboard.putNumber("Tilt Position", this.encoder.getPosition());
+  // }
+
+  public void setPosition(double position){
+    leftPIDController.setReference(position, ControlType.kPosition);
+    rightPIDController.setReference(position, ControlType.kPosition);
   }
 
-  /**
-   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
-   *
-   * @return value of some boolean subsystem state, such as a digital sensor.
-   */
-  public boolean exampleCondition() {
-    // Query some boolean state, such as a digital sensor.
+  public void setVoltage(double voltage){
+    leftMotor.setVoltage(voltage);
+    rightMotor.setVoltage(-voltage);
+  }
+
+  public void stop(){
+    leftMotor.setVoltage(0);
+    rightMotor.setVoltage(0);
+  }
+
+  public boolean atTarget(){
     return false;
-  }
-
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
-
-  @Override
-  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
   }
 }
