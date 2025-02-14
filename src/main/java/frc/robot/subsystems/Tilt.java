@@ -18,7 +18,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 // import edu.wpi.first.math.MathUtil;
 // import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.Constants.DeviceIds;
 
 public class Tilt extends SubsystemBase {
   
@@ -28,7 +28,8 @@ public class Tilt extends SubsystemBase {
   AbsoluteEncoder encoder;
 
   public Tilt(){
-    this.mainMotor = new SparkMax(Constants.DeviceIds.tilt, MotorType.kBrushless);
+    int id = DeviceIds.tilt;
+    this.mainMotor = new SparkMax(id, MotorType.kBrushless);
     this.mainConfig = new SparkMaxConfig();
 
     this.PIDController = mainMotor.getClosedLoopController();

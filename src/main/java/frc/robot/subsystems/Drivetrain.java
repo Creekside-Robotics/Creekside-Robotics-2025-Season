@@ -18,8 +18,7 @@ import edu.wpi.first.wpilibj.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import frc.robot.Constants;
+import frc.robot.Constants.DeviceIds;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.utils.LimelightHelpers;
 import frc.robot.utils.LimelightHelpers.LimelightResults;
@@ -29,20 +28,20 @@ import frc.robot.utils.LimelightHelpers.LimelightResults;
 
 public class Drivetrain extends SubsystemBase{
   
-  double maxVelocity = Constants.DrivetrainConstants.maxVelocity; //3 meters per second
-  double maxAngularVelocity = Constants.DrivetrainConstants.maxAngularVelocity; //0.5 rot per second
+  double maxVelocity = DrivetrainConstants.maxVelocity; //3 meters per second
+  double maxAngularVelocity = DrivetrainConstants.maxAngularVelocity; //0.5 rot per second
 
-  double baseLength = Constants.DrivetrainConstants.wheelBaseLength;
+  double baseLength = DrivetrainConstants.wheelBaseLength;
 
   Translation2d frontLeftPosition = new Translation2d(baseLength/2, baseLength/2);
   Translation2d frontRightPosition = new Translation2d(baseLength/2, -baseLength/2);
   Translation2d backLeftPosition = new Translation2d(-baseLength/2, baseLength/2);
   Translation2d backRightPosition = new Translation2d(-baseLength/2, -baseLength/2);
 
-  final SwerveModule m_frontLeft = new SwerveModule(Constants.DeviceIds.fLSwerveDrive, Constants.DeviceIds.fLSwerveTurn, 0, 0, 0, 0);
-  final SwerveModule m_frontRight = new SwerveModule(Constants.DeviceIds.fRSwerveDrive, Constants.DeviceIds.fRSwerveTurn, 0, 0, 0, 0);
-  final SwerveModule m_backLeft = new SwerveModule(Constants.DeviceIds.bLSwerveDrive, Constants.DeviceIds.bLSwerveTurn, 0, 0, 0, 0);
-  final SwerveModule m_backRight = new SwerveModule(Constants.DeviceIds.bRSwerveDrive, Constants.DeviceIds.bRSwerveTurn, 0, 0, 0, 0);
+  final SwerveModule m_frontLeft = new SwerveModule(DeviceIds.fLSwerveDrive, DeviceIds.fLSwerveTurn);
+  final SwerveModule m_frontRight = new SwerveModule(DeviceIds.fRSwerveDrive, DeviceIds.fRSwerveTurn);
+  final SwerveModule m_backLeft = new SwerveModule(DeviceIds.bLSwerveDrive, DeviceIds.bLSwerveTurn);
+  final SwerveModule m_backRight = new SwerveModule(DeviceIds.bRSwerveDrive, DeviceIds.bRSwerveTurn);
 
   final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
     frontLeftPosition,
@@ -94,7 +93,7 @@ public class Drivetrain extends SubsystemBase{
     SwerveModuleState[] states =
         kinematics.toSwerveModuleStates(
             ChassisSpeeds.discretize(
-                fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getGyroAngle()): new ChassisSpeeds(xSpeed, ySpeed, rot), Constants.DrivetrainConstants.periodTime));
+                fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getGyroAngle()): new ChassisSpeeds(xSpeed, ySpeed, rot), DrivetrainConstants.periodTime));
 
     for(int i = 0; i < modules.length; i++) {
       modules[i].setDesiredState(states[i]);
