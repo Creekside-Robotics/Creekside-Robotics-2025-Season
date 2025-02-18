@@ -12,6 +12,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DeviceIds;
 import frc.robot.Constants.ArmConstants;
@@ -21,19 +22,25 @@ public class Arm extends SubsystemBase {
   SparkMax leftGrabber;
   SparkMax rightGrabber;
   SparkMaxConfig config;
-
+  DigitalInput limitSwitch;
 
   public Arm() {
-    rightGrabber = new SparkMax(DeviceIds.rightGrabber, MotorType.kBrushless);
-    leftGrabber = new SparkMax(DeviceIds.leftGrabber, MotorType.kBrushless);
+    this.rightGrabber = new SparkMax(DeviceIds.rightGrabber, MotorType.kBrushless);
+    this.leftGrabber = new SparkMax(DeviceIds.leftGrabber, MotorType.kBrushless);
+
+    this.limitSwitch = new DigitalInput(DeviceIds.armLimitSwitch);
     
-    config = new SparkMaxConfig();
-    config.inverted(false);
-    config.idleMode(IdleMode.kBrake);
+    this.config = new SparkMaxConfig();
+    this.config.inverted(false);
+    this.config.idleMode(IdleMode.kBrake);
     
-    rightGrabber.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    config.inverted(true);
-    leftGrabber.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    this.rightGrabber.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    this.config.inverted(true);
+    this.leftGrabber.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+  }
+
+  public boolean hasCoral(){
+    return this.limitSwitch.get();
   }
 
   public void intake(){

@@ -20,6 +20,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 // import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DeviceIds;
+import frc.robot.Constants.ElevatorConstants;
 
 public class Elevator extends SubsystemBase {
   
@@ -56,8 +57,8 @@ public class Elevator extends SubsystemBase {
   // }
 
   public void setPosition(double position){
-    leftPIDController.setReference(position, ControlType.kPosition);
-    rightPIDController.setReference(position, ControlType.kPosition);
+    leftPIDController.setReference(position*ElevatorConstants.positionConversionFactor, ControlType.kPosition);
+    rightPIDController.setReference(position*ElevatorConstants.positionConversionFactor, ControlType.kPosition);
   }
 
   public void setVoltage(double voltage){

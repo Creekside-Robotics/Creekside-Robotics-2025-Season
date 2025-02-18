@@ -27,12 +27,12 @@ public final class Constants {
     
     public static int fLSwerveDrive = 1;
     public static int fLSwerveTurn = 2;
-    public static int fRSwerveDrive = 3;
-    public static int fRSwerveTurn = 4;
-    public static int bLSwerveDrive = 5;
-    public static int bLSwerveTurn = 6;
-    public static int bRSwerveDrive = 7;
-    public static int bRSwerveTurn = 8;
+    public static int fRSwerveDrive = 7;
+    public static int fRSwerveTurn = 8;
+    public static int bLSwerveDrive = 3;
+    public static int bLSwerveTurn = 4;
+    public static int bRSwerveDrive = 5;
+    public static int bRSwerveTurn = 6;
 
     public static int leftElevator = 9;
     public static int rightElevator = 10;
@@ -43,6 +43,8 @@ public final class Constants {
     public static int leftGrabber = 13;
     public static int rightGrabber = 14;
     public static int tilt = 15;
+
+    public static int armLimitSwitch = 1; //DIO port on rio
     
   }
 
@@ -54,7 +56,7 @@ public final class Constants {
 
     public static double maxPIDError = 0;
 
-    public static double kP = 8.0;
+    public static double kP = 1.0;
     public static double kI = 0.0;
     public static double kD = 0.0;
 
@@ -87,6 +89,22 @@ public final class Constants {
     public static double intakeVoltage = 4.5;
     public static double outakeVoltage = 5;
 
+  }
+
+  public static class TiltConstants {
+    public static double positionOffset = 0;
+    public static double intakePostition = 0-positionOffset;
+    public static double l4Score = 3*Math.PI/4;
+  }
+
+  public static class ElevatorConstants {
+    public static double positionConversionFactor = 2*Math.PI*2; //Circumfrance of the gear in meters
+    public static double pickupPosition = 0; //Meters
+    
+    public static double l4Score = 0;
+    public static double l3Score = 0;
+    public static double l2Score = 0;
+    public static double troughScore = 0;
   }
 
 
