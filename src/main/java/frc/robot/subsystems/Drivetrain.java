@@ -13,7 +13,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-//import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -22,9 +21,6 @@ import frc.robot.Constants.DeviceIds;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.utils.LimelightHelpers;
 import frc.robot.utils.LimelightHelpers.LimelightResults;
-
-
-
 
 public class Drivetrain extends SubsystemBase{
   
@@ -38,10 +34,10 @@ public class Drivetrain extends SubsystemBase{
   Translation2d backLeftPosition = new Translation2d(-baseLength/2, baseLength/2);
   Translation2d backRightPosition = new Translation2d(-baseLength/2, -baseLength/2);
 
-  final SwerveModule m_frontLeft = new SwerveModule(DeviceIds.fLSwerveDrive, DeviceIds.fLSwerveTurn);
-  final SwerveModule m_frontRight = new SwerveModule(DeviceIds.fRSwerveDrive, DeviceIds.fRSwerveTurn);
-  final SwerveModule m_backLeft = new SwerveModule(DeviceIds.bLSwerveDrive, DeviceIds.bLSwerveTurn);
-  final SwerveModule m_backRight = new SwerveModule(DeviceIds.bRSwerveDrive, DeviceIds.bRSwerveTurn);
+  final SwerveModule m_frontLeft = new SwerveModule(DeviceIds.fLSwerveDrive, DeviceIds.fLSwerveTurn, DeviceIds.fLEncoder);
+  final SwerveModule m_frontRight = new SwerveModule(DeviceIds.fRSwerveDrive, DeviceIds.fRSwerveTurn, DeviceIds.fREncoder);
+  final SwerveModule m_backLeft = new SwerveModule(DeviceIds.bLSwerveDrive, DeviceIds.bLSwerveTurn, DeviceIds.bLEncoder);
+  final SwerveModule m_backRight = new SwerveModule(DeviceIds.bRSwerveDrive, DeviceIds.bRSwerveTurn, DeviceIds.bREncoder);
 
   final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
     frontLeftPosition,
@@ -67,9 +63,6 @@ public class Drivetrain extends SubsystemBase{
 
   private final Field2d field2d = new Field2d();
 
-
-
-
   public Drivetrain() {
     gyro.reset();
 
@@ -81,24 +74,37 @@ public class Drivetrain extends SubsystemBase{
     SmartDashboard.putData("Field Display", field2d);
   }
 
+  @Override
   public void periodic() {
     this.poseEstimator.update(getGyroAngle(), getModulePositions());
     this.updatePoseWithLimelight();
+    // SmartDashboard.putNumber("Current Rot:", m_frontLeft.getTurnPosRadians());
+    // SmartDashboard.putNumber("Desired Rot:", Math.toRadians(45));
+    // double volts = m_frontLeft.turnController.calculate(m_frontLeft.getTurnPosRadians(), Math.toRadians(45));
+    // SmartDashboard.putNumber("Voltage:", volts);
+    // SmartDashboard.putNumber("Error:", m_frontLeft.turnController.getError());
+
+    // DrivetrainConstants.angleKP = SmartDashboard.getNumber("p", 0);
+    // DrivetrainConstants.angleKI = SmartDashboard.getNumber("i", 0);
+    // DrivetrainConstants.angleKD = SmartDashboard.getNumber("d", 0);
   }
 
 
   public void setModuleStates(double xSpeed, double ySpeed, double rot, boolean fieldRelative){
     SwerveModule[] modules = {this.m_frontLeft, this.m_frontRight, this.m_backLeft, this.m_backRight};
+    fieldRelative = false;
 
     SwerveModuleState[] states =
         kinematics.toSwerveModuleStates(
-            ChassisSpeeds.discretize(
-                fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getGyroAngle()): new ChassisSpeeds(xSpeed, ySpeed, rot), DrivetrainConstants.periodTime));
+            ChassisSpeeds.discretize( 
+                fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getGyroAngle()) : new ChassisSpeeds(xSpeed, ySpeed, rot), DrivetrainConstants.periodTime));
 
-    for(int i = 0; i < modules.length; i++) {
-      modules[i].setDesiredState(states[i]);
-    }
+    modules[0].setDesiredState(states[0], true);
+    modules[1].setDesiredState(states[1], false);
+    modules[2].setDesiredState(states[2], false);
+    modules[3].setDesiredState(states[3], false);
   }
+
 
 
   public void updatePoseWithLimelight() {
@@ -126,8 +132,8 @@ public class Drivetrain extends SubsystemBase{
 
 
   private Rotation2d getGyroAngle(){
-    var rotation = Rotation2d.fromDegrees(-this.gyro.getGyroAngleZ());
-    SmartDashboard.putNumber("Heading", rotation.getRadians());
+    Rotation2d rotation = Rotation2d.fromDegrees(-this.gyro.getGyroAngleZ());
+    SmartDashboard.putNumber("Gyro", rotation.getRadians());
     return rotation;
   }
 

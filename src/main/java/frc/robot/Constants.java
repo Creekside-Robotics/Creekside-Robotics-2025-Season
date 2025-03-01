@@ -34,6 +34,11 @@ public final class Constants {
     public static int bRSwerveDrive = 5;
     public static int bRSwerveTurn = 6;
 
+    public static int fLEncoder = 9;
+    public static int fREncoder = 10;
+    public static int bLEncoder = 11;
+    public static int bREncoder = 12;
+
     public static int leftElevator = 9;
     public static int rightElevator = 10;
 
@@ -44,21 +49,28 @@ public final class Constants {
     public static int rightGrabber = 14;
     public static int tilt = 15;
 
-    public static int armLimitSwitch = 1; //DIO port on rio
+    public static int armLimitSwitch = 0; //DIO port on rio
     
   }
 
   public static class DrivetrainConstants {
     public static double maxVelocity = 3.0; //meters per second
     public static double maxAcceleration = 0.1; //meters per second^2
-    public static double maxAngularVelocity = Math.PI; //0.5 rotations per second
-    public static double maxAngularAcceleration = Math.PI/8; //rotations per second^2
+    public static double maxAngularVelocity = 3; //Rotations per second
 
     public static double maxPIDError = 0;
 
-    public static double kP = 1.0;
-    public static double kI = 0.0;
-    public static double kD = 0.0;
+    public static double angleKP = 4.0;
+    public static double angleKI = 0.0;
+    public static double angleKD = 0.0;
+
+    public static double driveKP = 0.75;
+    public static double driveKI = 0.0;
+    public static double driveKD = 0.0;
+
+    public static double driveKS = 0.1615;
+    public static double driveKV = 9.25;
+    public static double driveKA = 0.3;
 
     public static final double wheelBaseLength = Units.inchesToMeters(25); //Center of one wheel to another
     public static final double wheelRadius = Units.inchesToMeters(2); //Radius of the wheel in meters
@@ -72,7 +84,7 @@ public final class Constants {
      
     public static Vector<N3> stateStandardDeviation = VecBuilder.fill(0.01, 0.01, 0.02);
     public static Vector<N3> visionStandardDeviation = VecBuilder.fill(0.5, 0.5, 1.0);
-    public static double periodTime = 0;
+    public static double periodTime = 0.02;
 
   }
 
@@ -87,7 +99,7 @@ public final class Constants {
 
   public static class ArmConstants {
     public static double intakeVoltage = 4.5;
-    public static double outakeVoltage = 5;
+    public static double outakeVoltage = 4.5;
 
   }
 

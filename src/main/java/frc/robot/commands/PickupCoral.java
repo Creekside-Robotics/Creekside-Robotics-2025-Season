@@ -46,6 +46,7 @@ public class PickupCoral extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return this.Arm.hasCoral();
+    //return this.Arm.hasCoral();
+    return false;
   }
 }

@@ -40,17 +40,20 @@ public class Arm extends SubsystemBase {
   }
 
   public boolean hasCoral(){
-    return this.limitSwitch.get();
+    return !this.limitSwitch.get();
   }
 
   public void intake(){
     rightGrabber.setVoltage(ArmConstants.intakeVoltage);
-    leftGrabber.setVoltage(-ArmConstants.intakeVoltage);
+    leftGrabber.setVoltage(ArmConstants.intakeVoltage);
+    if (hasCoral()){
+      this.stop();
+    }
   }
 
   public void outtake(){
     rightGrabber.setVoltage(-ArmConstants.intakeVoltage);
-    leftGrabber.setVoltage(ArmConstants.intakeVoltage);
+    leftGrabber.setVoltage(-ArmConstants.intakeVoltage);
   }
 
   public void stop(){

@@ -4,9 +4,16 @@
 
 package frc.robot;
 
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.DrivetrainConstants;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -75,11 +82,35 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    // SmartDashboard.putNumber("P", 0.0);
+    // SmartDashboard.putNumber("I", 0.0);
+    // SmartDashboard.putNumber("D", 0.0);
+    // SmartDashboard.putBoolean("On?", false);
   }
 
+  // PIDController testController = new PIDController(0,0,0);
+  // SparkMax testMotor = new SparkMax(10, MotorType.kBrushless);
+  // SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(0.001,0.1);
+
+
   /** This function is called periodically during operator control. */
+
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    // double setpoint = 0.5;
+
+    // testController.setPID(SmartDashboard.getNumber("P", 0.0), SmartDashboard.getNumber("I", 0.0), SmartDashboard.getNumber("D", 0.0));
+
+    // if (SmartDashboard.getBoolean("On?", false)) {
+    //   double appliedVoltage = testController.calculate(testMotor.getEncoder().getVelocity(), setpoint) + driveFeedforward.calculate(setpoint);
+
+    //   testMotor.setVoltage(appliedVoltage);
+
+    // } else {
+    //   testMotor.setVoltage(0);
+    // }
+    // System.out.println(testMotor.getEncoder().getVelocity());
+  }
 
   @Override
   public void testInit() {
@@ -93,9 +124,11 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when the robot is first started up. */
   @Override
-  public void simulationInit() {}
-
+  public void simulationInit() {
+  }
+  
   /** This function is called periodically whilst in simulation. */
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+  }
 }

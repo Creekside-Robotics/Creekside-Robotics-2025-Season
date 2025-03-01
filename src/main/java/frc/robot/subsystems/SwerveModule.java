@@ -1,5 +1,9 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -8,78 +12,62 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.spark.SparkClosedLoopController;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import frc.robot.Constants;
+import frc.robot.Constants.DrivetrainConstants;
 
 
 
-public class SwerveModule {
-  private static int kEncoderResolution = 4096;
-
+public class SwerveModule extends SubsystemBase{
   //Motor controllers and encoders
-  private static SparkMax driveMotor;
-  private static SparkMax turnMotor;
+  private SparkMax driveMotor;
+  private SparkMax turnMotor;
   
-  AbsoluteEncoder driveEncoder;
-  AbsoluteEncoder turnEncoder;
+  RelativeEncoder driveEncoder;
+  CANcoder turnEncoder;
 
-  SparkClosedLoopController drivePID;
-  SparkClosedLoopController turnPID;
+  // PIDController turnController;
+  PIDController turnController;
 
-  /* Constructs a new Swerve module with:
+  PIDController driveController;
+  SimpleMotorFeedforward driveFeedforward;
+  // SimpleMotorFeedforward turnFeedforward = new SimpleMotorFeedforward(0.5, kEncoderResolution)
+
+  /** 
+   * Constructs a new Swerve module with:
    * Drive motor
    * Turn Motor
    * Config Both
    */
-  public SwerveModule(int driveMotorID, int turningMotorID) {
+  public SwerveModule(int driveMotorID, int turningMotorID, int canCoderID) {
     driveMotor = new SparkMax(driveMotorID, MotorType.kBrushless);
     turnMotor = new SparkMax(turningMotorID, MotorType.kBrushless);
 
-    driveEncoder = driveMotor.getAbsoluteEncoder();
-    turnEncoder = turnMotor.getAbsoluteEncoder();
+    driveEncoder = driveMotor.getEncoder();
+    turnEncoder = new CANcoder(canCoderID);
+    
+    turnController = new PIDController(DrivetrainConstants.angleKP, DrivetrainConstants.angleKI, DrivetrainConstants.angleKD);
+    turnController.enableContinuousInput(-Math.PI, Math.PI);
+    // turnController.setTolerance(Math.toRadians(15));
 
-    drivePID = driveMotor.getClosedLoopController();
-    turnPID = turnMotor.getClosedLoopController();
+    driveFeedforward = new SimpleMotorFeedforward(DrivetrainConstants.driveKS, DrivetrainConstants.driveKV);
+    driveController = new PIDController(DrivetrainConstants.driveKP, DrivetrainConstants.driveKI, DrivetrainConstants.driveKD);
 
     SparkMaxConfig driveConfig = new SparkMaxConfig();
-    SparkMaxConfig turnConfig = new SparkMaxConfig();
-
-    //IdleMode Config
     driveConfig.idleMode(IdleMode.kBrake);
-
-    //Position and Velocity Conversion Factors
-    driveConfig.encoder.positionConversionFactor(1/kEncoderResolution); //Rotation per encoder counts
-    driveConfig.encoder.velocityConversionFactor(1); //Counts per second
-
-    //Set feedback sensor and pid constants
-    driveConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-    driveConfig.closedLoop.pid(Constants.DrivetrainConstants.kP,Constants.DrivetrainConstants.kI,Constants.DrivetrainConstants.kD);
-
-    driveConfig.closedLoop.maxMotion.maxVelocity(Constants.DrivetrainConstants.maxVelocity);
-    driveConfig.closedLoop.maxMotion.maxAcceleration(Constants.DrivetrainConstants.maxAcceleration);
-    driveConfig.closedLoop.maxMotion.allowedClosedLoopError(Constants.DrivetrainConstants.maxPIDError);
-
-    driveConfig.signals.primaryEncoderPositionPeriodMs(5);
-    
-    turnConfig.apply(driveConfig);
-
-    turnConfig.closedLoop.maxMotion.maxVelocity(Constants.DrivetrainConstants.maxAngularVelocity);
-    turnConfig.closedLoop.maxMotion.maxAcceleration(Constants.DrivetrainConstants.maxAngularAcceleration);
-    turnConfig.closedLoop.maxMotion.allowedClosedLoopError(Constants.DrivetrainConstants.maxPIDError);
-    
     driveMotor.configure(driveConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    turnMotor.configure(turnConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    
   }
 
   /**
@@ -88,7 +76,7 @@ public class SwerveModule {
    * @return The current state of the module.
    */
   public SwerveModuleState getState() {
-    return new SwerveModuleState(driveEncoder.getVelocity()*driveMotor.configAccessor.encoder.getVelocityConversionFactor(), new Rotation2d(turnEncoder.getPosition()));
+    return new SwerveModuleState(driveEncoder.getVelocity(), new Rotation2d(turnEncoder.getAbsolutePosition().getValueAsDouble()));
   }
 
   public double toRPM(double velocityMPS){
@@ -98,27 +86,39 @@ public class SwerveModule {
   //returns current position of the module
   public SwerveModulePosition getPosition() {
     return new SwerveModulePosition(
-        driveEncoder.getPosition(), new Rotation2d(turnEncoder.getPosition()));
+        driveEncoder.getPosition(), new Rotation2d(turnEncoder.getAbsolutePosition().getValueAsDouble()));
   }
 
-  //sets desired state of the module
-  public void setDesiredState(SwerveModuleState desiredState) {
-    Rotation2d encoderRotation = new Rotation2d(turnEncoder.getPosition()); //current rotation
+  public double getTurnPosRadians(){
+    return (turnEncoder.getAbsolutePosition().getValueAsDouble())*Math.PI;
+  }
 
-    // Optimize the reference state to avoid spinning further than 90 degrees
-    desiredState.optimize(encoderRotation);
+  //sets desired state of the module (Calculated all in radians)
+  public void setDesiredState(SwerveModuleState desiredState, boolean printStatus) {
 
-    // Scale speed by cosine of angle error. This scales down movement perpendicular to the desired
-    // direction of travel that can occur when modules change directions. This results in smoother
-    // driving.
-    desiredState.cosineScale(encoderRotation);
+    desiredState.optimize(new Rotation2d(getTurnPosRadians()));
+    double driveVoltage = driveController.calculate(driveEncoder.getVelocity(), toRPM(desiredState.speedMetersPerSecond)) + driveFeedforward.calculate(desiredState.speedMetersPerSecond);
+    double turnVoltage = turnController.calculate(getTurnPosRadians(), desiredState.angle.getRadians()/2);
 
-    // Set the reference of the drive motor based on desired state
-    drivePID.setReference(toRPM(desiredState.speedMetersPerSecond), ControlType.kMAXMotionVelocityControl);
+    driveVoltage = MathUtil.clamp(driveVoltage, -12, 12);
+    turnVoltage = MathUtil.clamp(turnVoltage, -12, 12);
 
-    // Set the reference of the turn motor based on desired state
-    turnPID.setReference(desiredState.angle.getRotations(), ControlType.kMAXMotionPositionControl);
+    if (printStatus){
+      SmartDashboard.putNumber("Desired Rot:", desiredState.angle.getRadians()/2);
+      SmartDashboard.putNumber("Current Rot:", getTurnPosRadians());
+      SmartDashboard.putNumber("Error:", turnController.getError());
+      // SmartDashboard.putNumber("Desired Speed:", toRPM(desiredState.speedMetersPerSecond));
+      // SmartDashboard.putNumber("Current Speed:", driveEncoder.getVelocity());
+      // SmartDashboard.putNumber("Drive Voltage:", driveVoltage);
+      SmartDashboard.putNumber("Turn Voltage:", turnVoltage);
+    }
+
+    // driveMotor.setVoltage(driveVoltage);
+    turnMotor.setVoltage(-turnVoltage);
     
-  
   }
 }
+// PID Tuning (More General):
+// https://www.youtube.com/watch?v=u0HFX_iuK5g
+// I really liked this video as it capture the behaviors of for PID constants much better:
+// https://www.youtube.com/watch?v=6EcxGh1fyMw&t=681s&pp=ygUPSG93IHRvIHR1bmUgcGlk
