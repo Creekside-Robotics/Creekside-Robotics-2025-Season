@@ -80,7 +80,7 @@ public class SwerveModule extends SubsystemBase{
   }
 
   public double toRPM(double velocityMPS){
-    return (velocityMPS * 60)/(2*Math.PI*Constants.DrivetrainConstants.wheelRadius);
+    return ((velocityMPS * 60)/(2*Math.PI*Constants.DrivetrainConstants.wheelRadius))/6.75;
   }
 
   //returns current position of the module
@@ -98,21 +98,22 @@ public class SwerveModule extends SubsystemBase{
 
     desiredState.optimize(new Rotation2d(getTurnPosRadians()));
     double driveVoltage = driveController.calculate(driveEncoder.getVelocity(), toRPM(desiredState.speedMetersPerSecond)) + driveFeedforward.calculate(desiredState.speedMetersPerSecond);
-    double turnVoltage = turnController.calculate(getTurnPosRadians(), desiredState.angle.getRadians()/2);
+    double turnVoltage = turnController.calculate(getTurnPosRadians(), 0);//desiredState.angle.getRadians()/2);
 
     driveVoltage = MathUtil.clamp(driveVoltage, -12, 12);
     turnVoltage = MathUtil.clamp(turnVoltage, -12, 12);
 
     if (printStatus){
-      SmartDashboard.putNumber("Desired Rot:", desiredState.angle.getRadians()/2);
-      SmartDashboard.putNumber("Current Rot:", getTurnPosRadians());
-      SmartDashboard.putNumber("Error:", turnController.getError());
-      // SmartDashboard.putNumber("Desired Speed:", toRPM(desiredState.speedMetersPerSecond));
-      // SmartDashboard.putNumber("Current Speed:", driveEncoder.getVelocity());
-      // SmartDashboard.putNumber("Drive Voltage:", driveVoltage);
-      SmartDashboard.putNumber("Turn Voltage:", turnVoltage);
+      // SmartDashboard.putNumber("Desired Rot:", desiredState.angle.getRadians()/2);
+      // SmartDashboard.putNumber("Current Rot:", getTurnPosRadians());
+      // SmartDashboard.putNumber("Error:", turnController.getError());
+      SmartDashboard.putNumber("Desired Speed:", toRPM(desiredState.speedMetersPerSecond));
+      SmartDashboard.putNumber("Current Speed:", driveEncoder.getVelocity());
+      SmartDashboard.putNumber("Drive Voltage:", driveVoltage);
+      //SmartDashboard.putNumber("Turn Voltage:", turnVoltage);
     }
 
+    driveMotor.set(desiredState.speedMetersPerSecond/DrivetrainConstants.maxVelocity);
     // driveMotor.setVoltage(driveVoltage);
     turnMotor.setVoltage(-turnVoltage);
     

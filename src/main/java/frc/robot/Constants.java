@@ -54,7 +54,7 @@ public final class Constants {
   }
 
   public static class DrivetrainConstants {
-    public static double maxVelocity = 3.0; //meters per second
+    public static double maxVelocity = 4; //meters per second
     public static double maxAcceleration = 0.1; //meters per second^2
     public static double maxAngularVelocity = 3; //Rotations per second
 
@@ -64,12 +64,12 @@ public final class Constants {
     public static double angleKI = 0.0;
     public static double angleKD = 0.0;
 
-    public static double driveKP = 0.75;
+    public static double driveKP = 0.0;
     public static double driveKI = 0.0;
     public static double driveKD = 0.0;
 
     public static double driveKS = 0.1615;
-    public static double driveKV = 9.25;
+    public static double driveKV = 1.2;
     public static double driveKA = 0.3;
 
     public static final double wheelBaseLength = Units.inchesToMeters(25); //Center of one wheel to another
