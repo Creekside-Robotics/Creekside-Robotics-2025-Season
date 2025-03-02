@@ -46,7 +46,7 @@ public class Drive extends Command {
     SmartDashboard.putNumber("X Input", m_joystick.getY());
     // System.out.println("Forward Value: " + xVelocity);
     double yVelocity = -MathUtil.applyDeadband(m_joystick.getX(), 0.1) * DrivetrainConstants.maxVelocity;
-    SmartDashboard.putNumber("Y Input", m_joystick.getX());
+    SmartDashboard.putNumber("Y Input", yVelocity);
     // System.out.println("Stafe Value: " + yVelocity);
     double angVelocity = -MathUtil.applyDeadband(m_joystick.getZ(), 0.1) * DrivetrainConstants.maxAngularVelocity;
     SmartDashboard.putNumber("Rot Input", m_joystick.getZ());

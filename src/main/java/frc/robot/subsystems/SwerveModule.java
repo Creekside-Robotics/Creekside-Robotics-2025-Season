@@ -98,7 +98,7 @@ public class SwerveModule extends SubsystemBase{
 
     desiredState.optimize(new Rotation2d(getTurnPosRadians()));
     double driveVoltage = driveController.calculate(driveEncoder.getVelocity(), toRPM(desiredState.speedMetersPerSecond)) + driveFeedforward.calculate(desiredState.speedMetersPerSecond);
-    double turnVoltage = turnController.calculate(getTurnPosRadians(), 0);//desiredState.angle.getRadians()/2);
+    double turnVoltage = turnController.calculate(getTurnPosRadians(), desiredState.angle.getRadians()/2);
 
     driveVoltage = MathUtil.clamp(driveVoltage, -12, 12);
     turnVoltage = MathUtil.clamp(turnVoltage, -12, 12);

@@ -54,7 +54,7 @@ public final class Constants {
   }
 
   public static class DrivetrainConstants {
-    public static double maxVelocity = 4; //meters per second
+    public static double maxVelocity = 1.5; //meters per second
     public static double maxAcceleration = 0.1; //meters per second^2
     public static double maxAngularVelocity = 3; //Rotations per second
 
