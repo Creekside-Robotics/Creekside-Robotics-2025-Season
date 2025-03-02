@@ -23,34 +23,34 @@ public final class Constants {
   }
 
   public static class DeviceIds {
-    public static int driver1Port = 0;
+    public static final int driver1Port = 0;
     
-    public static int fLSwerveDrive = 1;
-    public static int fLSwerveTurn = 2;
-    public static int fRSwerveDrive = 7;
-    public static int fRSwerveTurn = 8;
-    public static int bLSwerveDrive = 3;
-    public static int bLSwerveTurn = 4;
-    public static int bRSwerveDrive = 5;
-    public static int bRSwerveTurn = 6;
+    public static final int fLSwerveDrive = 1;
+    public static final int fLSwerveTurn = 2;
+    public static final int fRSwerveDrive = 7;
+    public static final int fRSwerveTurn = 8;
+    public static final int bLSwerveDrive = 3;
+    public static final int bLSwerveTurn = 4;
+    public static final int bRSwerveDrive = 5;
+    public static final int bRSwerveTurn = 6;
 
-    public static int fLEncoder = 9;
-    public static int fREncoder = 10;
-    public static int bLEncoder = 11;
-    public static int bREncoder = 12;
+    public static final int fLEncoder = 9;
+    public static final int fREncoder = 10;
+    public static final int bLEncoder = 11;
+    public static final int bREncoder = 12;
 
-    public static int leftElevator = 9;
-    public static int rightElevator = 10;
+    public static final int leftElevator = 9;
+    public static final int rightElevator = 10;
 
-    public static int algaeBase = 11;
-    public static int algaeWheel = 12;
+    public static final int algaeBase = 11;
+    public static final int algaeWheel = 12;
 
-    public static int leftGrabber = 13;
-    public static int rightGrabber = 14;
-    public static int tilt = 15;
+    public static final int leftGrabber = 13;
+    public static final int rightGrabber = 14;
+    public static final int tilt = 15;
 
     /** DIO port on rio */
-    public static int armLimitSwitch = 0;
+    public static final int armLimitSwitch = 0;
   }
 
   public static class DrivetrainConstants {

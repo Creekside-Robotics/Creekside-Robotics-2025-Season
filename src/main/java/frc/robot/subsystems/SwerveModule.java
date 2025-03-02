@@ -25,30 +25,29 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import frc.robot.Constants;
 import frc.robot.Constants.DrivetrainConstants;
 
-public class SwerveModule extends SubsystemBase{
+public class SwerveModule extends SubsystemBase {
   //Motor controllers and encoders
-  private SparkMax driveMotor;
-  private SparkMax turnMotor;
+  private final SparkMax driveMotor;
+  private final SparkMax turnMotor;
   
-  RelativeEncoder driveEncoder;
-  CANcoder turnEncoder;
+  private final RelativeEncoder driveEncoder;
+  private final CANcoder turnEncoder;
 
-  // PIDController turnController;
-  PIDController turnController;
+  private final PIDController turnController;
 
-  PIDController driveController;
-  SimpleMotorFeedforward driveFeedforward;
+  private final PIDController driveController;
+  private final SimpleMotorFeedforward driveFeedforward;
   // SimpleMotorFeedforward turnFeedforward = new SimpleMotorFeedforward(0.5, kEncoderResolution)
 
   /** 
    * Constructs a new Swerve module with drive and turn motor and applies respective configuration to both.
    * @param driveMotorID ID for the drive motor
-   * @param turningMotorID Id for the turn motor
+   * @param turnMotorID Id for the turn motor
    * @param canCoderID ID for CANcoder
    */
-  public SwerveModule(int driveMotorID, int turningMotorID, int canCoderID) {
+  public SwerveModule(int driveMotorID, int turnMotorID, int canCoderID) {
     driveMotor = new SparkMax(driveMotorID, MotorType.kBrushless);
-    turnMotor = new SparkMax(turningMotorID, MotorType.kBrushless);
+    turnMotor = new SparkMax(turnMotorID, MotorType.kBrushless);
 
     driveEncoder = driveMotor.getEncoder();
     turnEncoder = new CANcoder(canCoderID);
@@ -60,7 +59,7 @@ public class SwerveModule extends SubsystemBase{
     driveFeedforward = new SimpleMotorFeedforward(DrivetrainConstants.driveKS, DrivetrainConstants.driveKV);
     driveController = new PIDController(DrivetrainConstants.driveKP, DrivetrainConstants.driveKI, DrivetrainConstants.driveKD);
 
-    SparkMaxConfig driveConfig = new SparkMaxConfig();
+    final SparkMaxConfig driveConfig = new SparkMaxConfig();
     driveConfig.idleMode(IdleMode.kBrake);
     driveMotor.configure(driveConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
@@ -70,7 +69,7 @@ public class SwerveModule extends SubsystemBase{
     return new SwerveModuleState(driveEncoder.getVelocity(), new Rotation2d(turnEncoder.getAbsolutePosition().getValueAsDouble()));
   }
 
-  public double toRPM(double velocityMPS){
+  public double toRPM(double velocityMPS) {
     return ((velocityMPS * 60)/(2*Math.PI*Constants.DrivetrainConstants.wheelRadius))/6.75;
   }
 
@@ -86,7 +85,6 @@ public class SwerveModule extends SubsystemBase{
 
   /** Sets desired state of the module (calculated in **RADIANS!!!**) */
   public void setDesiredState(SwerveModuleState desiredState, boolean printStatus) {
-
     desiredState.optimize(new Rotation2d(getTurnPosRadians()));
     double driveVoltage = driveController.calculate(driveEncoder.getVelocity(), toRPM(desiredState.speedMetersPerSecond)) + driveFeedforward.calculate(desiredState.speedMetersPerSecond);
     double turnVoltage = turnController.calculate(getTurnPosRadians(), desiredState.angle.getRadians()/2);

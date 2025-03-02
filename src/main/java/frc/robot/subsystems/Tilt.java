@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DeviceIds;
 
 public class Tilt extends SubsystemBase {
-  
   SparkMax mainMotor;
   SparkMaxConfig mainConfig;
   SparkClosedLoopController PIDController;

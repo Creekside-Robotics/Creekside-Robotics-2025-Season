@@ -25,15 +25,11 @@ import frc.robot.utils.LimelightHelpers.LimelightResults;
 public class Drivetrain extends SubsystemBase {
   double baseLength = DrivetrainConstants.wheelBaseLength;
 
-  Translation2d frontLeftPosition = new Translation2d(baseLength/2, baseLength/2);
-  Translation2d frontRightPosition = new Translation2d(baseLength/2, -baseLength/2);
-  Translation2d backLeftPosition = new Translation2d(-baseLength/2, baseLength/2);
-  Translation2d backRightPosition = new Translation2d(-baseLength/2, -baseLength/2);
-
-  final SwerveModule m_frontLeft = new SwerveModule(DeviceIds.fLSwerveDrive, DeviceIds.fLSwerveTurn, DeviceIds.fLEncoder);
-  final SwerveModule m_frontRight = new SwerveModule(DeviceIds.fRSwerveDrive, DeviceIds.fRSwerveTurn, DeviceIds.fREncoder);
-  final SwerveModule m_backLeft = new SwerveModule(DeviceIds.bLSwerveDrive, DeviceIds.bLSwerveTurn, DeviceIds.bLEncoder);
-  final SwerveModule m_backRight = new SwerveModule(DeviceIds.bRSwerveDrive, DeviceIds.bRSwerveTurn, DeviceIds.bREncoder);
+  //? i think this should just be put in kinematics directly without declaring new variables, but who cares i guess (the garbage collector cares i guess)
+  private final Translation2d frontLeftPosition = new Translation2d(baseLength/2, baseLength/2);
+  private final Translation2d frontRightPosition = new Translation2d(baseLength/2, -baseLength/2);
+  private final Translation2d backLeftPosition = new Translation2d(-baseLength/2, baseLength/2);
+  private final Translation2d backRightPosition = new Translation2d(-baseLength/2, -baseLength/2);
 
   final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
     frontLeftPosition,
@@ -41,6 +37,11 @@ public class Drivetrain extends SubsystemBase {
     backLeftPosition,
     backRightPosition
   );
+
+  private final SwerveModule m_frontLeft = new SwerveModule(DeviceIds.fLSwerveDrive, DeviceIds.fLSwerveTurn, DeviceIds.fLEncoder);
+  private final SwerveModule m_frontRight = new SwerveModule(DeviceIds.fRSwerveDrive, DeviceIds.fRSwerveTurn, DeviceIds.fREncoder);
+  private final SwerveModule m_backLeft = new SwerveModule(DeviceIds.bLSwerveDrive, DeviceIds.bLSwerveTurn, DeviceIds.bLEncoder);
+  private final SwerveModule m_backRight = new SwerveModule(DeviceIds.bRSwerveDrive, DeviceIds.bRSwerveTurn, DeviceIds.bREncoder);
 
   private final ADIS16448_IMU gyro = new ADIS16448_IMU();
 
