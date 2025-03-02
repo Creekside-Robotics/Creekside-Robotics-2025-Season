@@ -18,7 +18,7 @@ public class PickupCoral extends Command {
   private final Arm Arm;
   private final Tilt Tilt;
 
-  public PickupCoral(Elevator elevator, Arm arm, Tilt tilt){
+  public PickupCoral(Elevator elevator, Arm arm, Tilt tilt) {
     this.Elevator = elevator;
     this.Arm = arm;
     this.Tilt = tilt;

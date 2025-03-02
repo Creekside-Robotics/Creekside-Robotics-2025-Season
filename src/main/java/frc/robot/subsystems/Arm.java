@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -39,24 +38,24 @@ public class Arm extends SubsystemBase {
     this.leftGrabber.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
-  public boolean hasCoral(){
+  public boolean hasCoral() {
     return !this.limitSwitch.get();
   }
 
-  public void intake(){
+  public void intake() {
     rightGrabber.setVoltage(ArmConstants.intakeVoltage);
     leftGrabber.setVoltage(ArmConstants.intakeVoltage);
-    if (hasCoral()){
+    if (hasCoral()) {
       this.stop();
     }
   }
 
-  public void outtake(){
+  public void outtake() {
     rightGrabber.setVoltage(-ArmConstants.intakeVoltage);
     leftGrabber.setVoltage(-ArmConstants.intakeVoltage);
   }
 
-  public void stop(){
+  public void stop() {
     rightGrabber.setVoltage(0);
     leftGrabber.setVoltage(0);
   }

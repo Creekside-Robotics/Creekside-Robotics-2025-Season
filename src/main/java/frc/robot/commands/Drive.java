@@ -24,13 +24,14 @@ public class Drive extends Command {
   private final SlewRateLimiter rotLimiter = new SlewRateLimiter(3);
 
   /**
-   * @param subsystem The subsystem used by this command.
+   * Constructs a new Drive instance. Handles getting joystick inputs and setting swerve state. 
+   * @param swerveDrive the drivetrain
+   * @param joystick the jotstick
    */
   public Drive(Drivetrain swerveDrive, CommandJoystick joystick) {
     m_swerveDrive = swerveDrive;
     m_joystick = joystick;
 
-    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(swerveDrive);
   }
 
@@ -41,7 +42,6 @@ public class Drive extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
     double xVelocity = -MathUtil.applyDeadband(m_joystick.getY(), 0.1) * DrivetrainConstants.maxVelocity;
     SmartDashboard.putNumber("X Input", m_joystick.getY());
     // System.out.println("Forward Value: " + xVelocity);
@@ -51,7 +51,6 @@ public class Drive extends Command {
     double angVelocity = -MathUtil.applyDeadband(m_joystick.getZ(), 0.1) * DrivetrainConstants.maxAngularVelocity;
     SmartDashboard.putNumber("Rot Input", m_joystick.getZ());
     // System.out.println("Rot Value: " + angVelocity);
-
 
     m_swerveDrive.setModuleStates(xVelocity, yVelocity, angVelocity, true);
   }

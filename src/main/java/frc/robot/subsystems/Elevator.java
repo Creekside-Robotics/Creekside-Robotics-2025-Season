@@ -4,20 +4,13 @@
 
 package frc.robot.subsystems;
 
-
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
-// import com.revrobotics.spark.SparkBase.PersistMode;
-// import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
-//import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
-
-// import edu.wpi.first.math.MathUtil;
-// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DeviceIds;
 import frc.robot.Constants.ElevatorConstants;
@@ -32,7 +25,7 @@ public class Elevator extends SubsystemBase {
   SparkClosedLoopController leftPIDController;
   AbsoluteEncoder encoder;
 
-  public Elevator(){
+  public Elevator() {
     rightMotor = new SparkMax(DeviceIds.rightElevator, MotorType.kBrushless);
     leftMotor = new SparkMax(DeviceIds.leftElevator, MotorType.kBrushless);
 
@@ -41,7 +34,6 @@ public class Elevator extends SubsystemBase {
 
     rightPIDController = rightMotor.getClosedLoopController();
     leftPIDController = leftMotor.getClosedLoopController();
-
   }
 
   // @Override
@@ -56,22 +48,22 @@ public class Elevator extends SubsystemBase {
   //   SmartDashboard.putNumber("Tilt Position", this.encoder.getPosition());
   // }
 
-  public void setPosition(double position){
+  public void setPosition(double position) {
     leftPIDController.setReference(position*ElevatorConstants.positionConversionFactor, ControlType.kPosition);
     rightPIDController.setReference(position*ElevatorConstants.positionConversionFactor, ControlType.kPosition);
   }
 
-  public void setVoltage(double voltage){
+  public void setVoltage(double voltage) {
     leftMotor.setVoltage(voltage);
     rightMotor.setVoltage(-voltage);
   }
 
-  public void stop(){
+  public void stop() {
     leftMotor.setVoltage(0);
     rightMotor.setVoltage(0);
   }
 
-  public boolean atTarget(){
+  public boolean atTarget() {
     return false;
   }
 }

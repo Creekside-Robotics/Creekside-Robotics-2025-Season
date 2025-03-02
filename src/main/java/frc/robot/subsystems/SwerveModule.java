@@ -1,14 +1,12 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -27,8 +25,6 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import frc.robot.Constants;
 import frc.robot.Constants.DrivetrainConstants;
 
-
-
 public class SwerveModule extends SubsystemBase{
   //Motor controllers and encoders
   private SparkMax driveMotor;
@@ -45,10 +41,10 @@ public class SwerveModule extends SubsystemBase{
   // SimpleMotorFeedforward turnFeedforward = new SimpleMotorFeedforward(0.5, kEncoderResolution)
 
   /** 
-   * Constructs a new Swerve module with:
-   * Drive motor
-   * Turn Motor
-   * Config Both
+   * Constructs a new Swerve module with drive and turn motor and applies respective configuration to both.
+   * @param driveMotorID ID for the drive motor
+   * @param turningMotorID Id for the turn motor
+   * @param canCoderID ID for CANcoder
    */
   public SwerveModule(int driveMotorID, int turningMotorID, int canCoderID) {
     driveMotor = new SparkMax(driveMotorID, MotorType.kBrushless);
@@ -67,14 +63,9 @@ public class SwerveModule extends SubsystemBase{
     SparkMaxConfig driveConfig = new SparkMaxConfig();
     driveConfig.idleMode(IdleMode.kBrake);
     driveMotor.configure(driveConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    
   }
 
-  /**
-   * Returns the current state of the module.
-   *
-   * @return The current state of the module.
-   */
+  /** Returns the current state of the module. */
   public SwerveModuleState getState() {
     return new SwerveModuleState(driveEncoder.getVelocity(), new Rotation2d(turnEncoder.getAbsolutePosition().getValueAsDouble()));
   }
@@ -83,17 +74,17 @@ public class SwerveModule extends SubsystemBase{
     return ((velocityMPS * 60)/(2*Math.PI*Constants.DrivetrainConstants.wheelRadius))/6.75;
   }
 
-  //returns current position of the module
+  /** Returns current position of the module */
   public SwerveModulePosition getPosition() {
     return new SwerveModulePosition(
         driveEncoder.getPosition(), new Rotation2d(turnEncoder.getAbsolutePosition().getValueAsDouble()));
   }
 
-  public double getTurnPosRadians(){
+  public double getTurnPosRadians() {
     return (turnEncoder.getAbsolutePosition().getValueAsDouble())*Math.PI;
   }
 
-  //sets desired state of the module (Calculated all in radians)
+  /** Sets desired state of the module (calculated in **RADIANS!!!**) */
   public void setDesiredState(SwerveModuleState desiredState, boolean printStatus) {
 
     desiredState.optimize(new Rotation2d(getTurnPosRadians()));
@@ -103,7 +94,7 @@ public class SwerveModule extends SubsystemBase{
     driveVoltage = MathUtil.clamp(driveVoltage, -12, 12);
     turnVoltage = MathUtil.clamp(turnVoltage, -12, 12);
 
-    if (printStatus){
+    if (printStatus) {
       // SmartDashboard.putNumber("Desired Rot:", desiredState.angle.getRadians()/2);
       // SmartDashboard.putNumber("Current Rot:", getTurnPosRadians());
       // SmartDashboard.putNumber("Error:", turnController.getError());
@@ -116,7 +107,6 @@ public class SwerveModule extends SubsystemBase{
     driveMotor.set(desiredState.speedMetersPerSecond/DrivetrainConstants.maxVelocity);
     // driveMotor.setVoltage(driveVoltage);
     turnMotor.setVoltage(-turnVoltage);
-    
   }
 }
 // PID Tuning (More General):

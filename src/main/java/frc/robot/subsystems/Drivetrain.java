@@ -22,11 +22,7 @@ import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.utils.LimelightHelpers;
 import frc.robot.utils.LimelightHelpers.LimelightResults;
 
-public class Drivetrain extends SubsystemBase{
-  
-  double maxVelocity = DrivetrainConstants.maxVelocity; //3 meters per second
-  double maxAngularVelocity = DrivetrainConstants.maxAngularVelocity; //0.5 rot per second
-
+public class Drivetrain extends SubsystemBase {
   double baseLength = DrivetrainConstants.wheelBaseLength;
 
   Translation2d frontLeftPosition = new Translation2d(baseLength/2, baseLength/2);
@@ -50,7 +46,7 @@ public class Drivetrain extends SubsystemBase{
 
   private final SwerveDrivePoseEstimator poseEstimator;
 
-   private final SwerveDriveOdometry m_odometry =
+  private final SwerveDriveOdometry m_odometry =
       new SwerveDriveOdometry(
           kinematics,
           new Rotation2d(gyro.getGyroAngleZ()),
@@ -67,9 +63,9 @@ public class Drivetrain extends SubsystemBase{
     gyro.reset();
 
     poseEstimator = new SwerveDrivePoseEstimator(kinematics, 
-    getGyroAngle(), 
-    getModulePositions(), 
-    new Pose2d());
+      getGyroAngle(), 
+      getModulePositions(), 
+      new Pose2d());
 
     SmartDashboard.putData("Field Display", field2d);
   }
@@ -89,10 +85,9 @@ public class Drivetrain extends SubsystemBase{
     // DrivetrainConstants.angleKD = SmartDashboard.getNumber("d", 0);
   }
 
-
-  public void setModuleStates(double xSpeed, double ySpeed, double rot, boolean fieldRelative){
+  public void setModuleStates(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
     SwerveModule[] modules = {this.m_frontLeft, this.m_frontRight, this.m_backLeft, this.m_backRight};
-    fieldRelative = true;
+    fieldRelative = true; //? why is this a parameter if we just set it to true?
 
     SwerveModuleState[] states =
         kinematics.toSwerveModuleStates(
@@ -104,8 +99,6 @@ public class Drivetrain extends SubsystemBase{
     modules[2].setDesiredState(states[2], false);
     modules[3].setDesiredState(states[3], false);
   }
-
-
 
   public void updatePoseWithLimelight() {
     LimelightResults results = LimelightHelpers.getLatestResults("limelight");
@@ -119,10 +112,8 @@ public class Drivetrain extends SubsystemBase{
       displayDrivetrainPose(pose);
 
       this.poseEstimator.addVisionMeasurement(pose, timestamp, DrivetrainConstants.visionStandardDeviation.times(distance));
-      
     }
   }
-
 
   private void displayDrivetrainPose(Pose2d pose) {
     this.field2d.setRobotPose(pose);
@@ -130,19 +121,18 @@ public class Drivetrain extends SubsystemBase{
     SmartDashboard.putData("Field Display", field2d);
   }
 
-
-  private Rotation2d getGyroAngle(){
+  private Rotation2d getGyroAngle() {
     Rotation2d rotation = Rotation2d.fromDegrees(-this.gyro.getGyroAngleZ());
     SmartDashboard.putNumber("Gyro", rotation.getRadians());
     return rotation;
   }
 
-  //returns module positions as list of SMP's (position, angle)
+  /** returns module positions as list of SMP's (position, angle) */
   private SwerveModulePosition[] getModulePositions() {
     SwerveModule[] modules = {this.m_frontLeft, this.m_frontRight, this.m_backLeft, this.m_backRight};
     SwerveModulePosition[] positions = {null, null, null, null};
 
-    for(int i = 0; i < modules.length; i++) {
+    for (int i = 0; i < modules.length; i++) {
       positions[i] = new SwerveModulePosition(
         modules[i].getPosition().distanceMeters * DrivetrainConstants.positionMultiplier,
         modules[i].getPosition().angle
@@ -151,7 +141,7 @@ public class Drivetrain extends SubsystemBase{
     return positions;
   }
 
-  //updates Odometry using gyro and swerve positions
+  /** updates Odometry using gyro and swerve positions */
   public void updateOdometry() {
     m_odometry.update(
         getGyroAngle(),

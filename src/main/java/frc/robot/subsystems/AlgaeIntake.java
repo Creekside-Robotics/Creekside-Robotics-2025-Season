@@ -31,8 +31,7 @@ public class AlgaeIntake extends SubsystemBase {
   AbsoluteEncoder baseEncoder;
   SparkClosedLoopController PIDController;
 
-
-  public AlgaeIntake(){
+  public AlgaeIntake() {
     baseMotor = new SparkMax(DeviceIds.algaeBase, MotorType.kBrushless);
     wheelMotor = new SparkMax(DeviceIds.algaeWheel, MotorType.kBrushless);
 
@@ -49,27 +48,26 @@ public class AlgaeIntake extends SubsystemBase {
   }
 
   @Override
-  public void periodic(){
+  public void periodic() {
     SmartDashboard.putNumber("AlgaeIntakePosition", baseEncoder.getPosition());
   }
 
-  public void extend(){
+  public void extend() {
     PIDController.setReference(0.25, ControlType.kPosition);
     intake();
   }
 
-  public void retract(){
+  public void retract() {
     PIDController.setReference(0, ControlType.kPosition);
     wheelMotor.setVoltage(0);
   }
 
-  public void intake(){
+  public void intake() {
     wheelMotor.setVoltage(AlgaeIntakeConstants.intakeVoltage);
-    //add limit switch detection here
+    // todo: add limit switch detection here
   }
 
   public void score(){
     wheelMotor.setVoltage(AlgaeIntakeConstants.scoreVoltage);
   }
-
 }

@@ -49,14 +49,17 @@ public final class Constants {
     public static int rightGrabber = 14;
     public static int tilt = 15;
 
-    public static int armLimitSwitch = 0; //DIO port on rio
-    
+    /** DIO port on rio */
+    public static int armLimitSwitch = 0;
   }
 
   public static class DrivetrainConstants {
-    public static double maxVelocity = 1.5; //meters per second
-    public static double maxAcceleration = 0.1; //meters per second^2
-    public static double maxAngularVelocity = 3; //Rotations per second
+    /** measured in meters per second */
+    public static double maxVelocity = 1.5;
+    /** meters per second^2 */
+    public static double maxAcceleration = 0.1;
+    /** R=rotations per second */
+    public static double maxAngularVelocity = 3;
 
     public static double maxPIDError = 0;
 
@@ -72,8 +75,10 @@ public final class Constants {
     public static double driveKV = 1.2;
     public static double driveKA = 0.3;
 
-    public static final double wheelBaseLength = Units.inchesToMeters(25); //Center of one wheel to another
-    public static final double wheelRadius = Units.inchesToMeters(2); //Radius of the wheel in meters
+    /** Center of one wheel to another */
+    public static final double wheelBaseLength = Units.inchesToMeters(25);
+    /** Radius of the wheel in meters */
+    public static final double wheelRadius = Units.inchesToMeters(2);
 
     public static double frontLeftEncoderOffset = Math.toRadians(-89.82) - Math.PI / 2.0;
     public static double frontRightEncoderOffset = Math.toRadians(-180.703) + Math.PI / 2.0;
@@ -94,13 +99,11 @@ public final class Constants {
 
     public static double intakeVoltage = 3;
     public static double scoreVoltage = 5;
-
   }
 
   public static class ArmConstants {
     public static double intakeVoltage = 4.5;
     public static double outakeVoltage = 4.5;
-
   }
 
   public static class TiltConstants {
@@ -110,14 +113,14 @@ public final class Constants {
   }
 
   public static class ElevatorConstants {
-    public static double positionConversionFactor = 2*Math.PI*2; //Circumfrance of the gear in meters
-    public static double pickupPosition = 0; //Meters
+    /** circumference of the gear in meters */
+    public static double positionConversionFactor = 2*Math.PI*2;
+    /** meters */
+    public static double pickupPosition = 0;
     
     public static double l4Score = 0;
     public static double l3Score = 0;
     public static double l2Score = 0;
     public static double troughScore = 0;
   }
-
-
 }
