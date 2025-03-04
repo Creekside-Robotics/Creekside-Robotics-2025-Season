@@ -88,7 +88,6 @@ public class Drivetrain extends SubsystemBase {
 
   public void setModuleStates(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
     SwerveModule[] modules = {this.m_frontLeft, this.m_frontRight, this.m_backLeft, this.m_backRight};
-    fieldRelative = true; //? why is this a parameter if we just set it to true?
 
     SwerveModuleState[] states =
         kinematics.toSwerveModuleStates(

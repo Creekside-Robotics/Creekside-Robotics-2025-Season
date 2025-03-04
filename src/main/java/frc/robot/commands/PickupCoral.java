@@ -28,7 +28,7 @@ public class PickupCoral extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    this.Tilt.setPosition(TiltConstants.intakePostition);
+    this.Elevator.setPosition(ElevatorConstants.intakePostitionStart);
     this.Arm.stop();
   }
 
@@ -36,7 +36,8 @@ public class PickupCoral extends Command {
   @Override
   public void execute() {
     this.Arm.intake();
-    this.Elevator.setPosition(ElevatorConstants.pickupPosition);
+    this.Tilt.setPosition(TiltConstants.intakePostition);
+    this.Elevator.setPosition(ElevatorConstants.intakePostitionEnd);
   }
 
   // Called once the command ends or is interrupted.
@@ -46,7 +47,6 @@ public class PickupCoral extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    //return this.Arm.hasCoral();
-    return false;
+    return this.Arm.hasCoral();
   }
 }

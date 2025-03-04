@@ -11,6 +11,10 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DeviceIds;
 import frc.robot.Constants.ElevatorConstants;
@@ -19,51 +23,53 @@ public class Elevator extends SubsystemBase {
   
   SparkMax leftMotor;
   SparkMax rightMotor;
-  SparkMaxConfig leftConfig;
-  SparkMaxConfig rightConfig;
-  SparkClosedLoopController rightPIDController;
-  SparkClosedLoopController leftPIDController;
+  PIDController pidController;
   AbsoluteEncoder encoder;
+  double offset;
+  double setpoint;
 
   public Elevator() {
     rightMotor = new SparkMax(DeviceIds.rightElevator, MotorType.kBrushless);
     leftMotor = new SparkMax(DeviceIds.leftElevator, MotorType.kBrushless);
 
-    rightConfig = new SparkMaxConfig();
-    leftConfig = new SparkMaxConfig();
-
-    rightPIDController = rightMotor.getClosedLoopController();
-    leftPIDController = leftMotor.getClosedLoopController();
+    pidController = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);
+    
+    encoder = leftMotor.getAbsoluteEncoder();
+    offset = encoder.getPosition();
   }
 
-  // @Override
-  // public void periodic() {
-  //   setVoltage(
-  //     MathUtil.clamp(
-  //       encoder.getPosition(), 
-  //       -TiltConstants.maxVoltage, 
-  //       TiltConstants.maxVoltage
-  //     ) + TiltConstants.kS * Math.sin(encoder.getPosition() - TiltConstants.hangingAngle)
-  //   );
-  //   SmartDashboard.putNumber("Tilt Position", this.encoder.getPosition());
-  // }
+  @Override
+  public void periodic() {
+    setPosition(this.setpoint);
+    SmartDashboard.putNumber("Elevator Position", this.getPosInches());
+    SmartDashboard.putNumber("Elevator Setpoint", this.setpoint);
+  }
+
+  public double getPosInches(){
+    return (this.encoder.getPosition()-this.offset)*ElevatorConstants.positionConversionFactor;
+  }
 
   public void setPosition(double position) {
-    leftPIDController.setReference(position*ElevatorConstants.positionConversionFactor, ControlType.kPosition);
-    rightPIDController.setReference(position*ElevatorConstants.positionConversionFactor, ControlType.kPosition);
+    double voltage = this.pidController.calculate(this.getPosInches(), position);
+    this.setpoint = position;
+    this.setVoltage(voltage);
   }
 
   public void setVoltage(double voltage) {
-    leftMotor.setVoltage(voltage);
-    rightMotor.setVoltage(-voltage);
+    this.leftMotor.setVoltage(voltage);
+    this.rightMotor.setVoltage(-voltage);
   }
 
   public void stop() {
-    leftMotor.setVoltage(0);
-    rightMotor.setVoltage(0);
+    this.leftMotor.setVoltage(0);
+    this.rightMotor.setVoltage(0);
   }
 
   public boolean atTarget() {
-    return false;
+    return (this.getPosInches()==this.setpoint);
+  }
+
+  public Command setPositionCommand(double pos){
+    return this.run(() -> this.setPosition(pos));
   }
 }

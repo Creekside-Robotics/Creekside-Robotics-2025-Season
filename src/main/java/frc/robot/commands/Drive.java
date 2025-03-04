@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
@@ -17,11 +16,8 @@ public class Drive extends Command {
 
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
 
-  private final Drivetrain m_swerveDrive;
-  private final CommandJoystick m_joystick;
-  private final SlewRateLimiter xLimiter = new SlewRateLimiter(3);
-  private final SlewRateLimiter yLimiter = new SlewRateLimiter(3);
-  private final SlewRateLimiter rotLimiter = new SlewRateLimiter(3);
+  private final Drivetrain swerveDrive;
+  private final CommandJoystick joystick;
 
   /**
    * Constructs a new Drive instance. Handles getting joystick inputs and setting swerve state. 
@@ -29,8 +25,8 @@ public class Drive extends Command {
    * @param joystick the jotstick
    */
   public Drive(Drivetrain swerveDrive, CommandJoystick joystick) {
-    m_swerveDrive = swerveDrive;
-    m_joystick = joystick;
+    this.swerveDrive = swerveDrive;
+    this.joystick = joystick;
 
     addRequirements(swerveDrive);
   }
@@ -42,17 +38,17 @@ public class Drive extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double xVelocity = -MathUtil.applyDeadband(m_joystick.getY(), 0.1) * DrivetrainConstants.maxVelocity;
-    SmartDashboard.putNumber("X Input", m_joystick.getY());
+    double xVelocity = -MathUtil.applyDeadband(this.joystick.getY(), 0.1);
+    SmartDashboard.putNumber("X Input", this.joystick.getY());
     // System.out.println("Forward Value: " + xVelocity);
-    double yVelocity = -MathUtil.applyDeadband(m_joystick.getX(), 0.1) * DrivetrainConstants.maxVelocity;
+    double yVelocity = -MathUtil.applyDeadband(this.joystick.getX(), 0.1);
     SmartDashboard.putNumber("Y Input", yVelocity);
     // System.out.println("Stafe Value: " + yVelocity);
-    double angVelocity = -MathUtil.applyDeadband(m_joystick.getZ(), 0.1) * DrivetrainConstants.maxAngularVelocity;
-    SmartDashboard.putNumber("Rot Input", m_joystick.getZ());
+    double angVelocity = -MathUtil.applyDeadband(this.joystick.getZ(), 0.1) * DrivetrainConstants.maxAngularVelocity;
+    SmartDashboard.putNumber("Rot Input", this.joystick.getZ());
     // System.out.println("Rot Value: " + angVelocity);
 
-    m_swerveDrive.setModuleStates(xVelocity, yVelocity, angVelocity, true);
+    this.swerveDrive.setModuleStates(xVelocity, yVelocity, angVelocity, true);
   }
 
   // Called once the command ends or is interrupted.

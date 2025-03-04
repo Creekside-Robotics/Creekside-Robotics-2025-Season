@@ -5,57 +5,68 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.DeviceIds;
+import frc.robot.Constants;
+import frc.robot.Constants.DrivetrainConstants;
+import frc.robot.Constants.TiltConstants; 
+import com.revrobotics.spark.config.SparkMaxConfig;
+
+
 
 public class Tilt extends SubsystemBase {
-  SparkMax mainMotor;
-  SparkMaxConfig mainConfig;
-  SparkClosedLoopController PIDController;
-  AbsoluteEncoder encoder;
+  private final SparkMax motor;
+  private final SparkAbsoluteEncoder encoder;
+  private final PIDController PIDController;
+  private double desiredPos;
 
-  public Tilt() {
-    this.mainMotor = new SparkMax(DeviceIds.tilt, MotorType.kBrushless);
-    this.mainConfig = new SparkMaxConfig();
+  public Tilt(){
+    this.motor = new SparkMax(Constants.DeviceIds.tilt,  MotorType.kBrushless);
+    this.encoder = motor.getAbsoluteEncoder();
+    this.PIDController =  new PIDController(TiltConstants.tiltP,TiltConstants.tiltI, TiltConstants.tiltD);
 
-    this.PIDController = mainMotor.getClosedLoopController();
-    //Set up through bore encoder
+    final SparkMaxConfig driveConfig = new SparkMaxConfig();
+    driveConfig.idleMode(IdleMode.kBrake);
 
-    this.mainConfig.idleMode(IdleMode.kBrake);
-    //mainConfig.closedLoop.pid(0, 0, 0);
-    this.mainMotor.configure(mainConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    PIDController.enableContinuousInput(-Math.PI, Math.PI);
   }
 
-  //@Override
-  // public void periodic() {
-  //   setVoltage(
-  //     MathUtil.clamp(
-  //       encoder.getPosition(), 
-  //       -TiltConstants.maxVoltage, 
-  //       TiltConstants.maxVoltage
-  //     ) + TiltConstants.kS * Math.sin(encoder.getPosition() - TiltConstants.hangingAngle)
-  //   );
-  //   SmartDashboard.putNumber("Tilt Position", this.encoder.getPosition());
-  // }
 
-  public void setPosition(double position) {
-    this.PIDController.setReference(position, ControlType.kPosition);
+  public double getPosRadians() {
+    return (this.encoder.getPosition() - TiltConstants.positionOffset)*Math.PI;
+  }
+ 
+  public void setVoltage(double voltage){
+    this.motor.setVoltage(voltage);
+  }
+ 
+  public void setPosition(double desiredPos){
+    double voltage = this.PIDController.calculate(this.getPosRadians(), desiredPos);
+    this.desiredPos = desiredPos;
+    this.motor.setVoltage(voltage);
   }
 
-  public void setVoltage(double voltage) {
-    this.mainMotor.setVoltage(voltage);
+  public boolean atPosition(){
+    return (this.getPosRadians() == this.desiredPos);
   }
 
-  public boolean atTarget() {
-    return true;
+  public void stop(){
+    this.motor.setVoltage(0);
+  }
+
+  public Command setPosCommand(double desired){
+    return this.run(() -> this.setPosition(desired));
   }
 }

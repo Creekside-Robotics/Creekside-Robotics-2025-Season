@@ -102,7 +102,7 @@ public class SwerveModule extends SubsystemBase {
       //SmartDashboard.putNumber("Turn Voltage:", turnVoltage);
     }
 
-    driveMotor.set(desiredState.speedMetersPerSecond/DrivetrainConstants.maxVelocity);
+    driveMotor.set(desiredState.speedMetersPerSecond*DrivetrainConstants.maxVelocityMultiplier);
     // driveMotor.setVoltage(driveVoltage);
     turnMotor.setVoltage(-turnVoltage);
   }

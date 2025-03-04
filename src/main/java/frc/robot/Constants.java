@@ -55,7 +55,7 @@ public final class Constants {
 
   public static class DrivetrainConstants {
     /** measured in meters per second */
-    public static double maxVelocity = 1.5;
+    public static double maxVelocityMultiplier = 0.9; // 0 to 1
     /** meters per second^2 */
     public static double maxAcceleration = 0.1;
     /** R=rotations per second */
@@ -108,19 +108,32 @@ public final class Constants {
 
   public static class TiltConstants {
     public static double positionOffset = 0;
-    public static double intakePostition = 0-positionOffset;
+    public static double intakePostition = 0;
     public static double l4Score = 3*Math.PI/4;
+    public static double tiltP = 4.0;
+    public static double tiltI = 0.0;
+    public static double tiltD = 0.0;
   }
 
   public static class ElevatorConstants {
-    /** circumference of the gear in meters */
-    public static double positionConversionFactor = 2*Math.PI*2;
-    /** meters */
-    public static double pickupPosition = 0;
+    /**Rotations to Inches conversion factor */
+    public static double positionConversionFactor = Math.PI*1.76;
     
-    public static double l4Score = 0;
+    public static double maxPostition = 24.5; //Vertical inches from basepoint
+
+    public static double kP = 0.49;
+    public static double kI = 0.0;
+    public static double kD = 0.0;
+
+    public static double kS = 0;
+    
+    public static double l4Score = 24.5;
     public static double l3Score = 0;
     public static double l2Score = 0;
-    public static double troughScore = 0;
+    public static double l1Score = 0;
+
+    public static double intakePostitionStart = 0;
+    public static double intakePostitionEnd = 0;
+
   }
 }
