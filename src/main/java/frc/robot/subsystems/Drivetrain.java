@@ -64,7 +64,7 @@ public class Drivetrain extends SubsystemBase {
     gyro.reset();
 
     poseEstimator = new SwerveDrivePoseEstimator(kinematics, 
-      getGyroAngle(), 
+      getGyroRotation(), 
       getModulePositions(), 
       new Pose2d());
 
@@ -73,7 +73,7 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
-    this.poseEstimator.update(getGyroAngle(), getModulePositions());
+    this.poseEstimator.update(getGyroRotation(), getModulePositions());
     this.updatePoseWithLimelight();
     // SmartDashboard.putNumber("Current Rot:", m_frontLeft.getTurnPosRadians());
     // SmartDashboard.putNumber("Desired Rot:", Math.toRadians(45));
@@ -92,7 +92,7 @@ public class Drivetrain extends SubsystemBase {
     SwerveModuleState[] states =
         kinematics.toSwerveModuleStates(
             ChassisSpeeds.discretize( 
-                fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getGyroAngle()) : new ChassisSpeeds(xSpeed, ySpeed, rot), DrivetrainConstants.periodTime));
+                fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getGyroRotation()) : new ChassisSpeeds(xSpeed, ySpeed, rot), DrivetrainConstants.periodTime));
 
     modules[0].setDesiredState(states[0], true);
     modules[1].setDesiredState(states[1], false);
@@ -109,19 +109,40 @@ public class Drivetrain extends SubsystemBase {
       double timestamp = results.targetingResults.timestamp_RIOFPGA_capture;
 
       SmartDashboard.putNumber("Timestamp", timestamp);
-      displayDrivetrainPose(pose);
+
+      setDrivetrainPose(pose);
+      displayDrivetrainPose();
 
       this.poseEstimator.addVisionMeasurement(pose, timestamp, DrivetrainConstants.visionStandardDeviation.times(distance));
     }
   }
 
-  private void displayDrivetrainPose(Pose2d pose) {
-    this.field2d.setRobotPose(pose);
-    
-    SmartDashboard.putData("Field Display", field2d);
+  /**
+   * Resets the drivetrain pose estimator to the given pose.
+   * 
+   * @param pose The Pose2d object that the drivetrain will be set to.
+   */
+  public void setDrivetrainPose(Pose2d pose) {
+    this.poseEstimator.resetPosition(getGyroRotation(), getModulePositions(), pose);
   }
 
-  private Rotation2d getGyroAngle() {
+  /**
+   * Gets the estimated pose of the robot on the field.
+   * 
+   * @return Pose2d object representing the robot on the field.
+   */
+  public Pose2d getPose() {
+    return this.poseEstimator.getEstimatedPosition();
+  }
+
+  /**
+   * Updates the display with the current drivetrain pose.
+   */
+  private void displayDrivetrainPose() {
+    this.field2d.setRobotPose(getPose());
+  }
+
+  private Rotation2d getGyroRotation() {
     Rotation2d rotation = Rotation2d.fromDegrees(-this.gyro.getGyroAngleZ());
     SmartDashboard.putNumber("Gyro", rotation.getRadians());
     return rotation;
@@ -144,7 +165,7 @@ public class Drivetrain extends SubsystemBase {
   /** updates Odometry using gyro and swerve positions */
   public void updateOdometry() {
     m_odometry.update(
-        getGyroAngle(),
+        getGyroRotation(),
         new SwerveModulePosition[] {
           m_frontLeft.getPosition(),
           m_frontRight.getPosition(),
