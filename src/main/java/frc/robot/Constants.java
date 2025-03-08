@@ -9,6 +9,8 @@ import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 
+//! EXTREME WARNING: THIS IS VERY BAD AND DANGEROUS
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
