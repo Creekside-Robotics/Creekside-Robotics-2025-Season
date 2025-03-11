@@ -13,40 +13,40 @@ import frc.robot.subsystems.Tilt;
 
 /** An example command that uses an example subsystem. */
 public class PickupCoral extends Command {
-
-  private final Elevator Elevator;
-  private final Arm Arm;
-  private final Tilt Tilt;
+  private final Elevator elevator;
+  private final Arm arm;
+  private final Tilt tilt;
 
   public PickupCoral(Elevator elevator, Arm arm, Tilt tilt) {
-    this.Elevator = elevator;
-    this.Arm = arm;
-    this.Tilt = tilt;
+    this.elevator = elevator;
+    this.arm = arm;
+    this.tilt = tilt;
     addRequirements(elevator);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    this.Elevator.setPosition(ElevatorConstants.intakePostitionStart);
-    this.Arm.stop();
+    this.elevator.setPosition(ElevatorConstants.intakePostitionStart);
+    this.arm.stop();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    this.Arm.intake();
-    this.Tilt.setPosition(TiltConstants.intakePostition);
-    this.Elevator.setPosition(ElevatorConstants.intakePostitionEnd);
+    this.tilt.setPosition(TiltConstants.intakePostition);
+    this.arm.intake();
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    this.arm.stop();
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return this.Arm.hasCoral();
+    return this.arm.hasCoral();
   }
 }

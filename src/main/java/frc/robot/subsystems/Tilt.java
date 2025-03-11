@@ -16,18 +16,16 @@ import frc.robot.Constants;
 import frc.robot.Constants.TiltConstants; 
 import com.revrobotics.spark.config.SparkMaxConfig;
 
-
-
 public class Tilt extends SubsystemBase {
   private final SparkMax motor;
   private final SparkAbsoluteEncoder encoder;
   private final PIDController PIDController;
   private double desiredPos;
 
-  public Tilt(){
+  public Tilt() {
     this.motor = new SparkMax(Constants.DeviceIds.tilt,  MotorType.kBrushless);
     this.encoder = motor.getAbsoluteEncoder();
-    this.PIDController =  new PIDController(TiltConstants.tiltP,TiltConstants.tiltI, TiltConstants.tiltD);
+    this.PIDController =  new PIDController(TiltConstants.tiltP, TiltConstants.tiltI, TiltConstants.tiltD);
 
     final SparkMaxConfig driveConfig = new SparkMaxConfig();
     driveConfig.idleMode(IdleMode.kBrake);
@@ -35,30 +33,29 @@ public class Tilt extends SubsystemBase {
     PIDController.enableContinuousInput(-Math.PI, Math.PI);
   }
 
-
   public double getPosRadians() {
     return (this.encoder.getPosition() - TiltConstants.positionOffset)*Math.PI;
   }
  
-  public void setVoltage(double voltage){
+  public void setVoltage(double voltage) {
     this.motor.setVoltage(voltage);
   }
  
-  public void setPosition(double desiredPos){
+  public void setPosition(double desiredPos) {
     double voltage = this.PIDController.calculate(this.getPosRadians(), desiredPos);
     this.desiredPos = desiredPos;
     this.motor.setVoltage(voltage);
   }
 
-  public boolean atPosition(){
+  public boolean atPosition() {
     return (this.getPosRadians() == this.desiredPos);
   }
 
-  public void stop(){
+  public void stop() {
     this.motor.setVoltage(0);
   }
 
-  public Command setPosCommand(double desired){
+  public Command setPosCommand(double desired) {
     return this.run(() -> this.setPosition(desired));
   }
 }

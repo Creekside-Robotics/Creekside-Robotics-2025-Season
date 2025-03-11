@@ -16,13 +16,12 @@ import frc.robot.Constants.DeviceIds;
 import frc.robot.Constants.ElevatorConstants;
 
 public class Elevator extends SubsystemBase {
-  
-  SparkMax leftMotor;
-  SparkMax rightMotor;
-  PIDController pidController;
-  AbsoluteEncoder encoder;
-  double offset;
-  double setpoint;
+  private final SparkMax leftMotor;
+  private final SparkMax rightMotor;
+  private final PIDController pidController;
+  private final AbsoluteEncoder encoder;
+  private final double offset;
+  private double setpoint;
 
   public Elevator() {
     rightMotor = new SparkMax(DeviceIds.rightElevator, MotorType.kBrushless);
@@ -41,13 +40,13 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putNumber("Elevator Setpoint", this.setpoint);
   }
 
-  public double getPosInches(){
+  public double getPosInches() {
     return (this.encoder.getPosition()-this.offset)*ElevatorConstants.positionConversionFactor;
   }
 
   public void setPosition(double position) {
-    double voltage = this.pidController.calculate(this.getPosInches(), position);
-    this.setpoint = position;
+    final double voltage = this.pidController.calculate(this.getPosInches(), position);
+    this.setpoint = position; //? if we are setting the position, we don't necessarily always want to also change the setpoint, right?
     this.setVoltage(voltage);
   }
 
@@ -61,11 +60,12 @@ public class Elevator extends SubsystemBase {
     this.rightMotor.setVoltage(0);
   }
 
+  /** Returns whether the elevator has reached the setpoint */
   public boolean atTarget() {
     return (this.getPosInches()==this.setpoint);
   }
 
-  public Command setPositionCommand(double pos){
+  public Command setPositionCommand(double pos) {
     return this.run(() -> this.setPosition(pos));
   }
 }

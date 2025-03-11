@@ -45,7 +45,7 @@ public class Arm extends SubsystemBase {
 
   public void intake() {
     rightGrabber.setVoltage(ArmConstants.intakeVoltage);
-    leftGrabber.setVoltage(ArmConstants.intakeVoltage);
+    leftGrabber.setVoltage(-ArmConstants.intakeVoltage);
     if (hasCoral()) {
       this.stop();
     }
@@ -53,7 +53,7 @@ public class Arm extends SubsystemBase {
 
   public void outtake() {
     rightGrabber.setVoltage(-ArmConstants.intakeVoltage);
-    leftGrabber.setVoltage(-ArmConstants.intakeVoltage);
+    leftGrabber.setVoltage(ArmConstants.intakeVoltage);
   }
 
   public void stop() {
@@ -61,7 +61,7 @@ public class Arm extends SubsystemBase {
     leftGrabber.setVoltage(0);
   }
 
-  public Command intakeCommand(){
+  public Command intakeCommand() {
     return this.run(() -> this.intake());
   }
 }

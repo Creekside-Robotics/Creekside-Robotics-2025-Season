@@ -105,7 +105,7 @@ public final class Constants {
 
   public static class ArmConstants {
     public static double intakeVoltage = 4.5;
-    public static double outakeVoltage = 4.5;
+    public static double outakeVoltage = 4.5; //? isn't outtake voltage just intake backwards? do we need two?
   }
 
   public static class TiltConstants {
@@ -129,6 +129,7 @@ public final class Constants {
 
     public static double kS = 0;
     
+    // todo: write comment explaining this
     public static double l4Score = 24.5;
     public static double l3Score = 0;
     public static double l2Score = 0;
@@ -136,6 +137,5 @@ public final class Constants {
 
     public static double intakePostitionStart = 0;
     public static double intakePostitionEnd = 0;
-
   }
 }
