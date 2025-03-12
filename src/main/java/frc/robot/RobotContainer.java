@@ -5,7 +5,13 @@
 package frc.robot;
 
 import frc.robot.commands.Drive;
+import frc.robot.commands.PickupCoral;
+import frc.robot.commands.ScoreCoral;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Tilt;
+import frc.robot.subsystems.Elevator.ElevatorPosition;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -17,11 +23,12 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
+  private final Drivetrain drivetrain = new Drivetrain();
+  private final Elevator elevator = new Elevator();
+  private final Arm arm = new Arm();
+  private final Tilt tilt = new Tilt();
 
-  private final Drivetrain drivetrain = new Drivetrain();  
-  private final CommandJoystick driverController =
-      new CommandJoystick(Constants.DeviceIds.driver1Port);
+  private final CommandJoystick driverController = new CommandJoystick(Constants.DeviceIds.driver1Port);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -40,6 +47,18 @@ public class RobotContainer {
    */
   private void configureBindings() {
     this.drivetrain.setDefaultCommand(new Drive(drivetrain, driverController));
+
+    this.driverController.button(7).onTrue(drivetrain.commandResetGyro());
+
+    this.driverController.button(9).onTrue(new PickupCoral(elevator, arm, tilt));
+
+    // scoring coral
+    this.driverController.button(8).onTrue(new ScoreCoral(elevator, arm, tilt, ElevatorPosition.LEVEL_1));
+    this.driverController.button(10).onTrue(new ScoreCoral(elevator, arm, tilt, ElevatorPosition.LEVEL_2));
+    this.driverController.button(12).onTrue(new ScoreCoral(elevator, arm, tilt, ElevatorPosition.LEVEL_3));
+    this.driverController.button(11).onTrue(new ScoreCoral(elevator, arm, tilt, ElevatorPosition.LEVEL_4));
+  
+    // todo: impliment precision movement with "joystick"
   }
 
   /**

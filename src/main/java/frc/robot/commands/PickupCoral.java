@@ -8,7 +8,7 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Tilt;
 
 public class PickupCoral extends SequentialCommandGroup {
-    PickupCoral(Elevator elevator, Arm arm, Tilt tilt) {
+    public PickupCoral(Elevator elevator, Arm arm, Tilt tilt) {
         arm.stop();
         addCommands(
             elevator.setPositionCommand(ElevatorConstants.intakePostitionStart),
