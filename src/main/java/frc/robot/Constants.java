@@ -111,6 +111,7 @@ public final class Constants {
   public static class TiltConstants {
     public static double positionOffset = 0;
     public static double intakePostition = 0;
+    public static double scorePosition = 0;
     public static double l4Score = 3*Math.PI/4;
     public static double tiltP = 4.0;
     public static double tiltI = 0.0;

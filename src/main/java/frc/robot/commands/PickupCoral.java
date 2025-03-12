@@ -11,6 +11,8 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Tilt;
 
+//! this likely needs to be re-written as a SequentialCommandGroup
+
 /** An example command that uses an example subsystem. */
 public class PickupCoral extends Command {
   private final Elevator elevator;

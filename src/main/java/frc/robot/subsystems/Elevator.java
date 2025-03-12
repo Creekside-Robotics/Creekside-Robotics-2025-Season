@@ -23,6 +23,20 @@ public class Elevator extends SubsystemBase {
   private final double offset;
   private double setpoint;
 
+  /** i stole this from the internet and it seems smart */
+  public enum ElevatorPosition {
+    LEVEL_1(ElevatorConstants.l1Score),
+    LEVEL_2(ElevatorConstants.l2Score),
+    LEVEL_3(ElevatorConstants.l3Score),
+    LEVEL_4(ElevatorConstants.l4Score);
+
+    public final double positionInches;
+
+    ElevatorPosition(double positionInches) {
+      this.positionInches = positionInches;
+    }
+  }
+
   public Elevator() {
     rightMotor = new SparkMax(DeviceIds.rightElevator, MotorType.kBrushless);
     leftMotor = new SparkMax(DeviceIds.leftElevator, MotorType.kBrushless);
