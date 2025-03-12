@@ -12,7 +12,7 @@ public class ScoreCoral extends SequentialCommandGroup {
         arm.stop();
         addCommands(
             elevator.setPositionCommand(position.positionInches),
-            tilt.setPosCommand(TiltConstants.scorePosition)
+            tilt.setPositionCommand(TiltConstants.scorePosition)
         );
     }
 }

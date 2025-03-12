@@ -55,7 +55,7 @@ public class Tilt extends SubsystemBase {
     this.motor.setVoltage(0);
   }
 
-  public Command setPosCommand(double desired) {
+  public Command setPositionCommand(double desired) {
     return this.run(() -> this.setPosition(desired));
   }
 }
