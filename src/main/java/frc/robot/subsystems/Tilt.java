@@ -18,8 +18,6 @@ import frc.robot.Constants.TiltConstants;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 public class Tilt extends SubsystemBase {
-  final double TARGET_DEADBAND = 2;
-
   private final SparkMax motor;
   private final RelativeEncoder encoder;
   private final PIDController PIDController;
@@ -63,7 +61,7 @@ public class Tilt extends SubsystemBase {
   }
 
   public boolean atTarget() {
-    if (this.getPosDegrees() < this.setpoint + TARGET_DEADBAND && this.getPosDegrees() > this.setpoint - TARGET_DEADBAND) {
+    if (this.getPosDegrees() < this.setpoint + TiltConstants.targetDeadband && this.getPosDegrees() > this.setpoint - TiltConstants.targetDeadband) {
       return true;
     }
     return false;

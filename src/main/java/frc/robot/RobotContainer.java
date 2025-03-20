@@ -70,7 +70,6 @@ public class RobotContainer {
     this.driverController.button(12).whileTrue(new ScoreCoral(elevator, arm, tilt, ElevatorConstants.l3Score));
     this.driverController.button(12).onFalse(new SetDefault(elevator, tilt));
 
-
     //Intake and outtake coral
     this.driverController.button(9).whileTrue(arm.intakeCommand());
     this.driverController.button(10).whileTrue(arm.outtakeCommand());
