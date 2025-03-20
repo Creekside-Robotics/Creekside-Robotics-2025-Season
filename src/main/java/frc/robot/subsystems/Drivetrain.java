@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DeviceIds;
 import frc.robot.Constants.DrivetrainConstants;
@@ -156,6 +157,10 @@ public class Drivetrain extends SubsystemBase {
 
   // ----------- COMMANDS -----------
   public Command commandResetGyro() {
-    return this.run(() -> this.gyro.reset());
+    return this.runOnce(() -> this.gyro.reset());
+  }
+
+  public Command forwardAuto(){
+    return this.run(() -> this.setModuleStates(1, 0, 0, false));
   }
 }

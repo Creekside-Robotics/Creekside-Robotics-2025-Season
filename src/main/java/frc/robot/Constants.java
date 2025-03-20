@@ -34,32 +34,29 @@ public final class Constants {
     public static final int bLSwerveDrive = 3;
     public static final int bLSwerveTurn = 4;
     public static final int bRSwerveDrive = 5;
-    public static final int bRSwerveTurn = 6;
+    public static final int bRSwerveTurn = 6; 
 
     public static final int fLEncoder = 9;
     public static final int fREncoder = 10;
     public static final int bLEncoder = 11;
     public static final int bREncoder = 12;
 
-    public static final int leftElevator = 9;
-    public static final int rightElevator = 10;
+    public static final int leftElevator = 13;
+    public static final int rightElevator = 14;
 
-    public static final int algaeBase = 11;
-    public static final int algaeWheel = 12;
+    public static final int algaeBase = 0;
+    public static final int algaeWheel = 0;
 
-    public static final int leftGrabber = 13;
-    public static final int rightGrabber = 14;
-    public static final int tilt = 15;
+    public static final int leftGrabber = 15;
+    public static final int rightGrabber = 16;
+    public static final int tilt = 17;
 
     /** DIO port on rio */
-    public static final int armLimitSwitch = 0;
+    public static final int armLimitSwitch = 9;
   }
 
   public static class DrivetrainConstants {
-    /** measured in meters per second */
-    public static double maxVelocityMultiplier = 0.9; // 0 to 1
-    /** meters per second^2 */
-    public static double maxAcceleration = 0.1;
+    public static double maxVelocityMultiplier = 0.25; // 0 to 1
     /** R=rotations per second */
     public static double maxAngularVelocity = 3;
 
@@ -110,33 +107,38 @@ public final class Constants {
 
   public static class TiltConstants {
     public static double positionOffset = 0;
-    public static double intakePostition = 0;
-    public static double scorePosition = 0;
-    public static double l4Score = 3*Math.PI/4;
-    public static double tiltP = 4.0;
-    public static double tiltI = 0.0;
+    public static double intakePostition = -40;
+    public static double scorePosition = 135;
+
+    public static double kS = 0.0;
+
+    public static double l4Score = 135;
+    public static double tiltP = 0.02;
+    public static double tiltI = 0.013;
     public static double tiltD = 0.0;
+
+    public static double posConversionFactor = 90 / 8.43;
   }
 
   public static class ElevatorConstants {
     /**Rotations to Inches conversion factor */
-    public static double positionConversionFactor = Math.PI*1.76;
+    public static double positionConversionFactor = Math.PI*1.76; //PI times diameter
     
-    public static double maxPostition = 24.5; //Vertical inches from basepoint
+    public static double maxPostition = 12.38; //Vertical inches from basepoint
 
-    public static double kP = 0.49;
-    public static double kI = 0.0;
+    public static double kP = 0.45;
+    public static double kI = 0.2;
     public static double kD = 0.0;
 
-    public static double kS = 0;
+    public static double kS = 0.0;
+    public static double kV = 0.0;
     
-    // todo: write comment explaining this
-    public static double l4Score = 24.5;
-    public static double l3Score = 0;
+    // Position in Rotations
+    public static double l4Score = 12.6;
+    public static double l3Score = 4.2;
     public static double l2Score = 0;
     public static double l1Score = 0;
 
-    public static double intakePostitionStart = 0;
-    public static double intakePostitionEnd = 0;
+    public static double intakePosition = 4.2;
   }
 }

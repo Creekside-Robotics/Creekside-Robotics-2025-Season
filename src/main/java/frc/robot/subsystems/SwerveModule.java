@@ -93,16 +93,16 @@ public class SwerveModule extends SubsystemBase {
     turnVoltage = MathUtil.clamp(turnVoltage, -12, 12);
 
     if (printStatus) {
-      // SmartDashboard.putNumber("Desired Rot:", desiredState.angle.getRadians()/2);
-      // SmartDashboard.putNumber("Current Rot:", getTurnPosRadians());
-      // SmartDashboard.putNumber("Error:", turnController.getError());
-      SmartDashboard.putNumber("Desired Speed:", toRPM(desiredState.speedMetersPerSecond));
+      SmartDashboard.putNumber("Desired Rot:", desiredState.angle.getRadians()/2);
+      SmartDashboard.putNumber("Current Rot:", getTurnPosRadians());
+      SmartDashboard.putNumber("Error:", turnController.getError());
+      SmartDashboard.putNumber("Desired Speed:", desiredState.speedMetersPerSecond);
       SmartDashboard.putNumber("Current Speed:", driveEncoder.getVelocity());
       SmartDashboard.putNumber("Drive Voltage:", driveVoltage);
-      //SmartDashboard.putNumber("Turn Voltage:", turnVoltage);
+      SmartDashboard.putNumber("Turn Voltage:", turnVoltage);
     }
 
-    driveMotor.set(desiredState.speedMetersPerSecond*DrivetrainConstants.maxVelocityMultiplier);
+    driveMotor.set(-desiredState.speedMetersPerSecond*DrivetrainConstants.maxVelocityMultiplier);
     // driveMotor.setVoltage(driveVoltage);
     turnMotor.setVoltage(-turnVoltage);
   }

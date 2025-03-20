@@ -4,14 +4,21 @@
 
 package frc.robot;
 
+import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.TiltConstants;
 import frc.robot.commands.Drive;
 import frc.robot.commands.PickupCoral;
 import frc.robot.commands.ScoreCoral;
+import frc.robot.commands.SetDefault;
+import frc.robot.commands.SetElevatorPosition;
+import frc.robot.commands.SetTiltPosition;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Tilt;
-import frc.robot.subsystems.Elevator.ElevatorPosition;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -26,7 +33,7 @@ public class RobotContainer {
   private final Drivetrain drivetrain = new Drivetrain();
   private final Elevator elevator = new Elevator();
   private final Arm arm = new Arm();
-  private final Tilt tilt = new Tilt();
+  public final Tilt tilt = new Tilt();
 
   private final CommandJoystick driverController = new CommandJoystick(Constants.DeviceIds.driver1Port);
 
@@ -48,17 +55,27 @@ public class RobotContainer {
   private void configureBindings() {
     this.drivetrain.setDefaultCommand(new Drive(drivetrain, driverController));
 
+    //reset gyro
     this.driverController.button(7).onTrue(drivetrain.commandResetGyro());
 
-    this.driverController.button(9).onTrue(new PickupCoral(elevator, arm, tilt));
-
-    // scoring coral
-    this.driverController.button(8).onTrue(new ScoreCoral(elevator, arm, tilt, ElevatorPosition.LEVEL_1));
-    this.driverController.button(10).onTrue(new ScoreCoral(elevator, arm, tilt, ElevatorPosition.LEVEL_2));
-    this.driverController.button(12).onTrue(new ScoreCoral(elevator, arm, tilt, ElevatorPosition.LEVEL_3));
-    this.driverController.button(11).onTrue(new ScoreCoral(elevator, arm, tilt, ElevatorPosition.LEVEL_4));
+    //intake coral
+    this.driverController.button(2).whileTrue(new PickupCoral(elevator, arm, tilt));
+    this.driverController.button(2).onFalse(new SetDefault(elevator, tilt));
   
-    // todo: impliment precision movement with "joystick"
+    //Score coral (Trigger, 11:L1&2, 12:L3)
+    this.driverController.button(1).whileTrue(new ScoreCoral(elevator, arm, tilt, ElevatorConstants.l4Score));
+    this.driverController.button(1).onFalse(new SetDefault(elevator, tilt));
+
+    this.driverController.button(11).whileTrue(new ScoreCoral(elevator, arm, tilt, ElevatorConstants.l1Score));
+    this.driverController.button(11).onFalse(new SetDefault(elevator, tilt));
+    
+    this.driverController.button(12).whileTrue(new ScoreCoral(elevator, arm, tilt, ElevatorConstants.l3Score));
+    this.driverController.button(12).onFalse(new SetDefault(elevator, tilt));
+
+
+    //Intake and outtake coral
+    this.driverController.button(9).whileTrue(arm.intakeCommand());
+    this.driverController.button(10).whileTrue(arm.outtakeCommand());
   }
 
   /**
@@ -66,8 +83,8 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  // public Command getAutonomousCommand() {
-  //   // An example command will be run in autonomous
-  //   return Autos.exampleAuto(m_exampleSubsystem);
-  // }
+  public Command getAutonomousCommand() {
+    // An example command will be run in autonomous
+    return new ParallelCommandGroup(drivetrain.forwardAuto(), new PickupCoral(elevator, arm, tilt));
+  }
 }
