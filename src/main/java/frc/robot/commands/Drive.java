@@ -18,6 +18,7 @@ public class Drive extends Command {
 
   private final Drivetrain swerveDrive;
   private final CommandJoystick joystick;
+  private boolean fieldRelative = true;
 
   /**
    * Constructs a new Drive instance. Handles getting joystick inputs and setting swerve state. 
@@ -45,10 +46,17 @@ public class Drive extends Command {
     double angVelocity = -MathUtil.applyDeadband(this.joystick.getZ(), 0.1) * DrivetrainConstants.maxAngularVelocity;
     SmartDashboard.putNumber("Rot Input", this.joystick.getZ());
 
-    DrivetrainConstants.maxVelocityMultiplier = (this.joystick.getThrottle()+1)/2;
+    if (joystick.button(3).getAsBoolean()) {
+      DrivetrainConstants.maxVelocityMultiplier = -0.1;
+      fieldRelative = false;
+    }else{
+      DrivetrainConstants.maxVelocityMultiplier = (this.joystick.getThrottle()+1)/4;
+      fieldRelative =  true;
+    }
+  
     SmartDashboard.putNumber("Velocity Multiplier", DrivetrainConstants.maxVelocityMultiplier);
 
-    this.swerveDrive.setModuleStates(xVelocity, yVelocity, angVelocity, true);
+    this.swerveDrive.setModuleStates(xVelocity, yVelocity, angVelocity, fieldRelative);
   }
 
   // Called once the command ends or is interrupted.

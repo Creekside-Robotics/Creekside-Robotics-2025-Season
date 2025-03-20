@@ -91,7 +91,7 @@ public final class Constants {
     public static Vector<N3> visionStandardDeviation = VecBuilder.fill(0.5, 0.5, 1.0);
     public static double periodTime = 0.02;
 
-    public static double autoSpeed = 0.25;
+    public static double autoSpeed = 0.5;
 
   }
 
@@ -110,7 +110,7 @@ public final class Constants {
 
   public static class TiltConstants {
     public static double positionOffset = 0;
-    public static double intakePostition = -40;
+    public static double intakePostition = -35;
     public static double scorePosition = 135;
 
     public static double kS = 0.0;
@@ -130,7 +130,7 @@ public final class Constants {
     public static double maxPostition = 12.38; //Vertical inches from basepoint
 
     public static double kP = 0.45;
-    public static double kI = 0.2;
+    public static double kI = 0.25;
     public static double kD = 0.0;
 
     public static double kS = 0.0;
@@ -138,10 +138,10 @@ public final class Constants {
     
     // Position in Rotations
     public static double l4Score = 12.6;
-    public static double l3Score = 4.2;
+    public static double l3Score = 2.0;
     public static double l2Score = 0;
     public static double l1Score = 0;
 
-    public static double intakePosition = 4.2;
+    public static double intakePosition = 4;
   }
 }

@@ -12,6 +12,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.TiltConstants; 
@@ -73,7 +74,7 @@ public class Tilt extends SubsystemBase {
     this.motor.setVoltage(0);
   }
 
-  // public Command setPositionCommand(double desired) {
-  //   return this.run(() -> this.setPosition(desired));
-  // }
+  public Command setPositionCommand(double desired) {
+    return this.run(() -> this.setPosition(desired));
+  }
 }

@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.commands.Drive;
+import frc.robot.commands.DriveAuto;
 import frc.robot.commands.PickupCoral;
 import frc.robot.commands.ScoreCoral;
 import frc.robot.commands.SetDefault;
@@ -25,7 +26,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  private final Drivetrain drivetrain = new Drivetrain();
+  public final Drivetrain drivetrain = new Drivetrain();
   private final Elevator elevator = new Elevator();
   private final Arm arm = new Arm();
   public final Tilt tilt = new Tilt();
@@ -56,6 +57,10 @@ public class RobotContainer {
     this.driverController.button(7).onTrue(drivetrain.commandResetGyro());
     this.backupController.button(7).onTrue(drivetrain.commandResetGyro());
 
+    //reset tower
+    this.driverController.button(4).whileTrue(new SetDefault(elevator, tilt));
+    this.backupController.button(4).whileTrue(new SetDefault(elevator, tilt));
+
     //intake coral
     this.driverController.button(2).whileTrue(new PickupCoral(elevator, arm, tilt));
     this.driverController.button(2).onFalse(new SetDefault(elevator, tilt));
@@ -76,7 +81,14 @@ public class RobotContainer {
     this.driverController.button(10).whileTrue(arm.outtakeCommand());
     this.backupController.button(9).whileTrue(arm.intakeCommand());
     this.backupController.button(10).whileTrue(arm.outtakeCommand());
+
+
+    //Direct control arm NO EXPLAINATION NECESSARY
+    this.backupController.button(3).whileTrue(tilt.setPositionCommand(this.backupController.getY()*60+75));
+
   }
+
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -85,6 +97,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return drivetrain.forwardAuto();
+    return new DriveAuto(drivetrain);
   }
 }

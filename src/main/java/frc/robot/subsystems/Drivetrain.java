@@ -41,10 +41,10 @@ public class Drivetrain extends SubsystemBase {
     backRightPosition
   );
 
-  private final SwerveModule m_frontLeft = new SwerveModule(DeviceIds.fLSwerveDrive, DeviceIds.fLSwerveTurn, DeviceIds.fLEncoder);
-  private final SwerveModule m_frontRight = new SwerveModule(DeviceIds.fRSwerveDrive, DeviceIds.fRSwerveTurn, DeviceIds.fREncoder);
-  private final SwerveModule m_backLeft = new SwerveModule(DeviceIds.bLSwerveDrive, DeviceIds.bLSwerveTurn, DeviceIds.bLEncoder);
-  private final SwerveModule m_backRight = new SwerveModule(DeviceIds.bRSwerveDrive, DeviceIds.bRSwerveTurn, DeviceIds.bREncoder);
+  public final SwerveModule m_frontLeft = new SwerveModule(DeviceIds.fLSwerveDrive, DeviceIds.fLSwerveTurn, DeviceIds.fLEncoder);
+  public final SwerveModule m_frontRight = new SwerveModule(DeviceIds.fRSwerveDrive, DeviceIds.fRSwerveTurn, DeviceIds.fREncoder);
+  public final SwerveModule m_backLeft = new SwerveModule(DeviceIds.bLSwerveDrive, DeviceIds.bLSwerveTurn, DeviceIds.bLEncoder);
+  public final SwerveModule m_backRight = new SwerveModule(DeviceIds.bRSwerveDrive, DeviceIds.bRSwerveTurn, DeviceIds.bREncoder);
 
   private final ADIS16448_IMU gyro = new ADIS16448_IMU();
 
@@ -88,6 +88,8 @@ public class Drivetrain extends SubsystemBase {
         kinematics.toSwerveModuleStates(
             ChassisSpeeds.discretize( 
                 fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getGyroAngle()) : new ChassisSpeeds(xSpeed, ySpeed, rot), DrivetrainConstants.periodTime));
+
+    SmartDashboard.putNumber("AutoSpeed", states[0].speedMetersPerSecond);
 
     modules[0].setDesiredState(states[0], true);
     modules[1].setDesiredState(states[1], false);
@@ -154,6 +156,6 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public Command forwardAuto(){
-    return this.run(() -> this.setModuleStates(DrivetrainConstants.autoSpeed, 0, 0, false));
+    return this.run(() -> this.setModuleStates(0.5, 0, 0, true));
   }
 }
