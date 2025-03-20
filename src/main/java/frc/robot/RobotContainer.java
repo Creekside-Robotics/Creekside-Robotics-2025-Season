@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.commands.Drive;
 import frc.robot.commands.DriveAuto;
+import frc.robot.commands.ManualTilt;
 import frc.robot.commands.PickupCoral;
 import frc.robot.commands.ScoreCoral;
 import frc.robot.commands.SetDefault;
@@ -84,8 +85,8 @@ public class RobotContainer {
 
 
     //Direct control arm NO EXPLAINATION NECESSARY
-    this.backupController.button(3).whileTrue(tilt.setPositionCommand(this.backupController.getY()*60+75));
-
+    this.backupController.button(3).whileTrue(new ManualTilt(tilt, backupController));
+    this.backupController.button(3).onFalse(new SetDefault(elevator, tilt));
   }
 
 

@@ -91,7 +91,7 @@ public final class Constants {
     public static Vector<N3> visionStandardDeviation = VecBuilder.fill(0.5, 0.5, 1.0);
     public static double periodTime = 0.02;
 
-    public static double autoSpeed = 0.5;
+    public static double autoSpeed = 2.0;
 
   }
 
@@ -116,7 +116,7 @@ public final class Constants {
     public static double kS = 0.0;
 
     public static double l4Score = 135;
-    public static double tiltP = 0.02;
+    public static double tiltP = 0.065;
     public static double tiltI = 0.013;
     public static double tiltD = 0.0;
 

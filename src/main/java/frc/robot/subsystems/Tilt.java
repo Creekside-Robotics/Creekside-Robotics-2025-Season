@@ -9,6 +9,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -54,11 +55,11 @@ public class Tilt extends SubsystemBase {
  
   public void setPosition(double desiredPos) {
     // double voltage = desiredPos<0 ? (this.PIDController.calculate(this.getPosDegrees(), desiredPos) + TiltConstants.kS) : (this.PIDController.calculate(this.getPosDegrees(), desiredPos) - TiltConstants.kS);
-    final double voltage = (this.PIDController.calculate(this.getPosDegrees(), desiredPos) + TiltConstants.kS) + this.feedforward.calculate(desiredPos);
+    final double voltage = MathUtil.clamp((this.PIDController.calculate(this.getPosDegrees(), desiredPos) + TiltConstants.kS) + this.feedforward.calculate(desiredPos), -2, 2);
     this.setpoint = desiredPos;
     this.motor.setVoltage(-voltage);
     SmartDashboard.putNumber("Tilt Error", this.PIDController.getError());
-    SmartDashboard.putNumber("Tilt Position", -this.encoder.getPosition());
+    SmartDashboard.putNumber("Tilt Position", this.getPosDegrees());
     SmartDashboard.putNumber("Tilt Setpoint", this.setpoint);
     SmartDashboard.putNumber("Tilt Voltage", -voltage);
   }
