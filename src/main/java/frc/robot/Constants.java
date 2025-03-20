@@ -26,6 +26,7 @@ public final class Constants {
 
   public static class DeviceIds {
     public static final int driver1Port = 0;
+    public static final int driver2Port = 1;
     
     public static final int fLSwerveDrive = 1;
     public static final int fLSwerveTurn = 2;
@@ -89,6 +90,8 @@ public final class Constants {
     public static Vector<N3> stateStandardDeviation = VecBuilder.fill(0.01, 0.01, 0.02);
     public static Vector<N3> visionStandardDeviation = VecBuilder.fill(0.5, 0.5, 1.0);
     public static double periodTime = 0.02;
+
+    public static double autoSpeed = 0.25;
 
   }
 

@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -17,8 +18,8 @@ import edu.wpi.first.wpilibj.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import frc.robot.Constants.DeviceIds;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.utils.LimelightHelpers;
@@ -71,21 +72,13 @@ public class Drivetrain extends SubsystemBase {
       new Pose2d());
 
     SmartDashboard.putData("Field Display", field2d);
+    CameraServer.startAutomaticCapture();
   }
 
   @Override
   public void periodic() {
     this.poseEstimator.update(getGyroAngle(), getModulePositions());
     this.updatePoseWithLimelight();
-    // SmartDashboard.putNumber("Current Rot:", m_frontLeft.getTurnPosRadians());
-    // SmartDashboard.putNumber("Desired Rot:", Math.toRadians(45));
-    // double volts = m_frontLeft.turnController.calculate(m_frontLeft.getTurnPosRadians(), Math.toRadians(45));
-    // SmartDashboard.putNumber("Voltage:", volts);
-    // SmartDashboard.putNumber("Error:", m_frontLeft.turnController.getError());
-
-    // DrivetrainConstants.angleKP = SmartDashboard.getNumber("p", 0);
-    // DrivetrainConstants.angleKI = SmartDashboard.getNumber("i", 0);
-    // DrivetrainConstants.angleKD = SmartDashboard.getNumber("d", 0);
   }
 
   public void setModuleStates(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
@@ -161,6 +154,6 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public Command forwardAuto(){
-    return this.run(() -> this.setModuleStates(1, 0, 0, false));
+    return this.run(() -> this.setModuleStates(DrivetrainConstants.autoSpeed, 0, 0, false));
   }
 }

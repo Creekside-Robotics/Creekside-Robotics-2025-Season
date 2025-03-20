@@ -5,7 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -78,10 +77,6 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    // SmartDashboard.putNumber("P", 0.0);
-    // SmartDashboard.putNumber("I", 0.0);
-    // SmartDashboard.putNumber("D", 0.0);
-    // SmartDashboard.putBoolean("On?", false);
   }
 
   // PIDController testController = new PIDController(0,0,0);

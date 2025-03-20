@@ -5,20 +5,15 @@
 package frc.robot;
 
 import frc.robot.Constants.ElevatorConstants;
-import frc.robot.Constants.TiltConstants;
 import frc.robot.commands.Drive;
 import frc.robot.commands.PickupCoral;
 import frc.robot.commands.ScoreCoral;
 import frc.robot.commands.SetDefault;
-import frc.robot.commands.SetElevatorPosition;
-import frc.robot.commands.SetTiltPosition;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Tilt;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -36,6 +31,8 @@ public class RobotContainer {
   public final Tilt tilt = new Tilt();
 
   private final CommandJoystick driverController = new CommandJoystick(Constants.DeviceIds.driver1Port);
+  private final CommandJoystick backupController = new CommandJoystick(Constants.DeviceIds.driver2Port);
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -57,6 +54,7 @@ public class RobotContainer {
 
     //reset gyro
     this.driverController.button(7).onTrue(drivetrain.commandResetGyro());
+    this.backupController.button(7).onTrue(drivetrain.commandResetGyro());
 
     //intake coral
     this.driverController.button(2).whileTrue(new PickupCoral(elevator, arm, tilt));
@@ -76,6 +74,8 @@ public class RobotContainer {
     //Intake and outtake coral
     this.driverController.button(9).whileTrue(arm.intakeCommand());
     this.driverController.button(10).whileTrue(arm.outtakeCommand());
+    this.backupController.button(9).whileTrue(arm.intakeCommand());
+    this.backupController.button(10).whileTrue(arm.outtakeCommand());
   }
 
   /**
@@ -85,6 +85,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new ParallelCommandGroup(drivetrain.forwardAuto(), new PickupCoral(elevator, arm, tilt));
+    return drivetrain.forwardAuto();
   }
 }
