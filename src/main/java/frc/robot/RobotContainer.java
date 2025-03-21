@@ -10,6 +10,7 @@ import frc.robot.commands.DriveAuto;
 import frc.robot.commands.ManualTilt;
 import frc.robot.commands.PickupCoral;
 import frc.robot.commands.ScoreCoral;
+import frc.robot.commands.ScoreL1;
 import frc.robot.commands.SetDefault;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
@@ -67,7 +68,7 @@ public class RobotContainer {
     this.driverController.button(2).onFalse(new SetDefault(elevator, tilt));
   
     //Score coral (Trigger, 11:L1&2, 12:L3)
-    this.driverController.button(1).whileTrue(new ScoreCoral(elevator, arm, tilt, ElevatorConstants.l4Score));
+    this.driverController.button(1).whileTrue(new ScoreL1(elevator, arm, tilt));
     this.driverController.button(1).onFalse(new SetDefault(elevator, tilt));
 
     this.driverController.button(11).whileTrue(new ScoreCoral(elevator, arm, tilt, ElevatorConstants.l1Score));
@@ -99,4 +100,5 @@ public class RobotContainer {
     // An example command will be run in autonomous
     return new DriveAuto(drivetrain);
   }
+
 }

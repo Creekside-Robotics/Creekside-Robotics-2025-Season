@@ -112,6 +112,7 @@ public final class Constants {
     public static double positionOffset = 0;
     public static double intakePostition = -35;
     public static double scorePosition = 135;
+    public static double scoreL1Position = 100;
 
     public static double kS = 0.0;
 
@@ -145,6 +146,8 @@ public final class Constants {
     public static double l2Score = 0;
     public static double l1Score = 0;
 
-    public static double intakePosition = 4.2;
+    public static double intakePosition = 4.1;
+
+    public static final double targetDeadband = 2;
   }
 }
