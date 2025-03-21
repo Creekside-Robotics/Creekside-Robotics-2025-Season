@@ -47,7 +47,7 @@ public class Drive extends Command {
     SmartDashboard.putNumber("Rot Input", this.joystick.getZ());
 
     if (joystick.button(3).getAsBoolean()) {
-      DrivetrainConstants.maxVelocityMultiplier = -0.1;
+      DrivetrainConstants.maxVelocityMultiplier = -0.075;
       fieldRelative = false;
     }else{
       DrivetrainConstants.maxVelocityMultiplier = (this.joystick.getThrottle()+1)/4;

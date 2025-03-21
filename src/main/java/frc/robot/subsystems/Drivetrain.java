@@ -91,7 +91,7 @@ public class Drivetrain extends SubsystemBase {
 
     SmartDashboard.putNumber("AutoSpeed", states[0].speedMetersPerSecond);
 
-    modules[0].setDesiredState(states[0], true);
+    modules[0].setDesiredState(states[0], false);
     modules[1].setDesiredState(states[1], false);
     modules[2].setDesiredState(states[2], false);
     modules[3].setDesiredState(states[3], false);
