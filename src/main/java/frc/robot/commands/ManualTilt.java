@@ -11,7 +11,8 @@ import frc.robot.subsystems.Tilt;
 
 /** This isn't in the Tilt class because we need isFinished and it doesn't look like we can do that there */
 public class ManualTilt extends Command {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+  /** shut up */
+  public static boolean enabled = false;
 
   private final Tilt tilt;
   private final CommandJoystick joystick;
@@ -30,8 +31,10 @@ public class ManualTilt extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    this.tilt.setPosition(this.joystick.getX()*60+75);
-    SmartDashboard.putNumber("Tilt Input", this.joystick.getX()*60+75);
+    if (ManualTilt.enabled) {
+      this.tilt.setPosition(this.joystick.getX()*60+75);
+      SmartDashboard.putNumber("Tilt Input", this.joystick.getX()*60+75);
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -41,6 +44,6 @@ public class ManualTilt extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return this.tilt.atTarget();
+    return false; // we are always running this, only buttons change whether it does anything
   }
 }

@@ -91,7 +91,7 @@ public final class Constants {
     public static Vector<N3> visionStandardDeviation = VecBuilder.fill(0.5, 0.5, 1.0);
     public static double periodTime = 0.02;
 
-    public static double autoSpeed = 2.0;
+    public static double autoSpeed = -0.5;
 
   }
 
@@ -112,19 +112,19 @@ public final class Constants {
     public static double positionOffset = 0;
     public static double intakePostition = -35;
     public static double scorePosition = 135;
-    public static double scoreL1Position = 100;
+    public static double scoreL1Position = 70;
 
     public static double kS = 0.0;
 
     public static double l4Score = 135;
-    public static double tiltP = 0.065;
+    public static double tiltP = 0.1;
     public static double tiltI = 0.013;
     public static double tiltD = 0.0;
 
     public static double posConversionFactor = 90 / 8.43;
 
     /** If the tilt error is within + and - this number then it is considered "at setpoint" */
-    public static final double targetDeadband = 2;
+    public static final double targetDeadband = 1.14;
   }
 
   public static class ElevatorConstants {
@@ -133,7 +133,7 @@ public final class Constants {
     
     public static double maxPostition = 12.38; //Vertical inches from basepoint
 
-    public static double kP = 0.45;
+    public static double kP = 0.7;
     public static double kI = 0.25;
     public static double kD = 0.0;
 
@@ -144,10 +144,10 @@ public final class Constants {
     public static double l4Score = 12.6;
     public static double l3Score = 2.0;
     public static double l2Score = 0;
-    public static double l1Score = 0;
+    public static double l1Score = 3.3;
 
-    public static double intakePosition = 4.1;
+    public static double intakePosition = 3.6;
 
-    public static final double targetDeadband = 2;
+    public static final double targetDeadband = 0.075;
   }
 }

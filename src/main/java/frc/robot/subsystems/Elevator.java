@@ -8,6 +8,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -59,7 +60,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public void setPosition(double position) {
-    final double voltage = this.pidController.calculate(-this.encoder.getPosition(), position) + feedforward.calculate(-this.encoder.getPosition());
+    final double voltage = MathUtil.clamp(this.pidController.calculate(-this.encoder.getPosition(), position) + feedforward.calculate(-this.encoder.getPosition()), -2, 2);
 
     SmartDashboard.putNumber("Elevator Error", this.pidController.getError());
     SmartDashboard.putNumber("Elevator Position", -this.encoder.getPosition());

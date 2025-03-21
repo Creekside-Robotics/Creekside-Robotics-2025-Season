@@ -68,7 +68,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     this.m_robotContainer.drivetrain.setModuleStates(2, 0, 0, true);
-    System.out.println("Auto Cycle");
+    // System.out.println("Auto Cycle");
   }
 
   @Override

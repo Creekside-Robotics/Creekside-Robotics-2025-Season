@@ -7,7 +7,6 @@ package frc.robot;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.commands.Drive;
 import frc.robot.commands.DriveAuto;
-import frc.robot.commands.ManualTilt;
 import frc.robot.commands.PickupCoral;
 import frc.robot.commands.ScoreCoral;
 import frc.robot.commands.ScoreL1;
@@ -35,7 +34,6 @@ public class RobotContainer {
 
   private final CommandJoystick driverController = new CommandJoystick(Constants.DeviceIds.driver1Port);
   private final CommandJoystick backupController = new CommandJoystick(Constants.DeviceIds.driver2Port);
-
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -84,9 +82,10 @@ public class RobotContainer {
     this.backupController.button(10).whileTrue(arm.outtakeCommand());
 
 
-    //Direct control arm NO EXPLAINATION NECESSARY
-    this.backupController.button(3).whileTrue(new ManualTilt(tilt, backupController));
-    this.backupController.button(3).onFalse(new SetDefault(elevator, tilt));
+    //Direct control arm
+    this.backupController.button(3).whileTrue(tilt.setManualTilt(true));
+    this.backupController.button(3).onFalse(tilt.setManualTilt(false));;
+    this.backupController.button(3).onFalse(new SetDefault(elevator, tilt));;
   }
 
 
@@ -99,6 +98,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return new DriveAuto(drivetrain);
+    // return new ParallelCommandGroup(new DriveAuto(drivetrain), new SequentialCommandGroup(new PickupCoral(elevator, arm, tilt), new SetDefault(elevator, tilt)));
   }
 
 }
