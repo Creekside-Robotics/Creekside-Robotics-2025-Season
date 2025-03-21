@@ -121,6 +121,9 @@ public final class Constants {
     public static double tiltD = 0.0;
 
     public static double posConversionFactor = 90 / 8.43;
+
+    /** If the tilt error is within + and - this number then it is considered "at setpoint" */
+    public static final double targetDeadband = 2;
   }
 
   public static class ElevatorConstants {
@@ -142,6 +145,6 @@ public final class Constants {
     public static double l2Score = 0;
     public static double l1Score = 0;
 
-    public static double intakePosition = 4;
+    public static double intakePosition = 4.2;
   }
 }

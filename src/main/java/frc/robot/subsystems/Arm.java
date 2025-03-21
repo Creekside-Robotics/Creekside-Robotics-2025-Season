@@ -19,11 +19,10 @@ import frc.robot.Constants.DeviceIds;
 import frc.robot.Constants.ArmConstants;
 
 public class Arm extends SubsystemBase {
-  
-  SparkMax leftGrabber;
-  SparkMax rightGrabber;
-  SparkMaxConfig config;
-  DigitalInput limitSwitch;
+  private final SparkMax leftGrabber;
+  private final SparkMax rightGrabber;
+  private final SparkMaxConfig config;
+  private final DigitalInput limitSwitch;
 
   public Arm() {
     this.rightGrabber = new SparkMax(DeviceIds.rightGrabber, MotorType.kBrushless);

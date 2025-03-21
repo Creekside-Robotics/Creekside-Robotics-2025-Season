@@ -26,7 +26,7 @@ import frc.robot.utils.LimelightHelpers;
 import frc.robot.utils.LimelightHelpers.LimelightResults;
 
 public class Drivetrain extends SubsystemBase {
-  double baseLength = DrivetrainConstants.wheelBaseLength;
+  private final double baseLength = DrivetrainConstants.wheelBaseLength; //? why is this here?
 
   //? i think this should just be put in kinematics directly without declaring new variables, but who cares i guess (the garbage collector cares i guess)
   private final Translation2d frontLeftPosition = new Translation2d(baseLength/2, baseLength/2);
@@ -82,9 +82,9 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void setModuleStates(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
-    SwerveModule[] modules = {this.m_frontLeft, this.m_frontRight, this.m_backLeft, this.m_backRight};
+    final SwerveModule[] modules = {this.m_frontLeft, this.m_frontRight, this.m_backLeft, this.m_backRight};
 
-    SwerveModuleState[] states =
+    final SwerveModuleState[] states =
         kinematics.toSwerveModuleStates(
             ChassisSpeeds.discretize( 
                 fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getGyroAngle()) : new ChassisSpeeds(xSpeed, ySpeed, rot), DrivetrainConstants.periodTime));

@@ -79,13 +79,7 @@ public class Robot extends TimedRobot {
     }
   }
 
-  // PIDController testController = new PIDController(0,0,0);
-  // SparkMax testMotor = new SparkMax(10, MotorType.kBrushless);
-  // SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(0.001,0.1);
-
-
   /** This function is called periodically during operator control. */
-
   @Override
   public void teleopPeriodic() {
   }

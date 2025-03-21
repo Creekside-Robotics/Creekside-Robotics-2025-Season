@@ -22,29 +22,29 @@ import frc.robot.Constants.DeviceIds;
 import frc.robot.Constants.AlgaeIntakeConstants;
 
 public class AlgaeIntake extends SubsystemBase {
-  
-  SparkMax baseMotor;
-  SparkMax wheelMotor;
+  private final SparkMax baseMotor;
+  private final SparkMax wheelMotor;
 
-  SparkMaxConfig baseConfig;
+  private final SparkMaxConfig baseConfig;
 
-  AbsoluteEncoder baseEncoder;
-  SparkClosedLoopController PIDController;
+  private final AbsoluteEncoder baseEncoder;
+  private final SparkClosedLoopController PIDController;
 
   public AlgaeIntake() {
-    baseMotor = new SparkMax(DeviceIds.algaeBase, MotorType.kBrushless);
-    wheelMotor = new SparkMax(DeviceIds.algaeWheel, MotorType.kBrushless);
+    this.baseMotor = new SparkMax(DeviceIds.algaeBase, MotorType.kBrushless);
+    this.wheelMotor = new SparkMax(DeviceIds.algaeWheel, MotorType.kBrushless);
 
-    baseConfig.idleMode(IdleMode.kBrake);
-    baseConfig.inverted(false);
-    baseConfig.encoder.positionConversionFactor(1/4096);
-    baseConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-    baseConfig.closedLoop.pid(1.0,0,0);
+    this.baseConfig = new SparkMaxConfig();
+    this.baseConfig.idleMode(IdleMode.kBrake);
+    this.baseConfig.inverted(false);
+    this.baseConfig.encoder.positionConversionFactor(1/4096);
+    this.baseConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
+    this.baseConfig.closedLoop.pid(1.0,0,0);
 
-    baseMotor.configure(baseConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    this.baseMotor.configure(baseConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-    baseEncoder = baseMotor.getAbsoluteEncoder();
-    PIDController = baseMotor.getClosedLoopController();
+    this.baseEncoder = baseMotor.getAbsoluteEncoder();
+    this.PIDController = baseMotor.getClosedLoopController();
   }
 
   @Override
@@ -54,7 +54,7 @@ public class AlgaeIntake extends SubsystemBase {
 
   public void extend() {
     PIDController.setReference(0.25, ControlType.kPosition);
-    intake();
+    this.intake();
   }
 
   public void retract() {

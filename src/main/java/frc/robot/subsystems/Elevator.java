@@ -16,8 +16,6 @@ import frc.robot.Constants.DeviceIds;
 import frc.robot.Constants.ElevatorConstants;
 
 public class Elevator extends SubsystemBase {
-  final double TARGET_DEADBAND = 0.2;
-
   private final SparkMax leftMotor;
   private final SparkMax rightMotor;
   private final PIDController pidController;
@@ -57,7 +55,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public double getPosInches() {
-    return (this.encoder.getPosition())*ElevatorConstants.positionConversionFactor;
+    return this.encoder.getPosition()*ElevatorConstants.positionConversionFactor;
   }
 
   public void setPosition(double position) {
@@ -85,7 +83,7 @@ public class Elevator extends SubsystemBase {
 
   /** Returns whether the elevator has reached the setpoint */
   public boolean atTarget() {
-    if (-this.encoder.getPosition() < this.setpoint + TARGET_DEADBAND && -this.encoder.getPosition() > this.setpoint - TARGET_DEADBAND) {
+    if (-this.encoder.getPosition() < this.setpoint + ElevatorConstants.targetDeadband && -this.encoder.getPosition() > this.setpoint - ElevatorConstants.targetDeadband) {
       return true;
     }
     return false;
