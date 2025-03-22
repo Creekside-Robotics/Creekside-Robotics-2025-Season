@@ -12,8 +12,8 @@ public class PickupCoral extends SequentialCommandGroup {
         arm.stop();
         addCommands(
             new SetElevatorPosition(elevator, ElevatorConstants.intakePosition),
-            new SetTiltPosition(tilt, TiltConstants.intakePostition),
-            arm.intakeCommand()
+            new SetTiltPosition(tilt, TiltConstants.intakePostition)
+            // arm.intakeCommand(),
         );
     }
 }

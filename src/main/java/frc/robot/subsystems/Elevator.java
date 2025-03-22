@@ -43,7 +43,8 @@ public class Elevator extends SubsystemBase {
     this.leftMotor = new SparkMax(DeviceIds.leftElevator, MotorType.kBrushless);
 
     this.pidController = new PIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD);
-    
+    this.pidController.setTolerance(ElevatorConstants.targetDeadband);
+
     this.encoder = leftMotor.getEncoder();
     this.feedforward = new SimpleMotorFeedforward(ElevatorConstants.kS, 0);
     this.setpoint = 0;
@@ -84,10 +85,7 @@ public class Elevator extends SubsystemBase {
 
   /** Returns whether the elevator has reached the setpoint */
   public boolean atTarget() {
-    if (-this.encoder.getPosition() < this.setpoint + ElevatorConstants.targetDeadband && -this.encoder.getPosition() > this.setpoint - ElevatorConstants.targetDeadband) {
-      return true;
-    }
-    return false;
+    return this.pidController.atSetpoint();
   }
 
   // public Command setPositionCommand(double pos) {

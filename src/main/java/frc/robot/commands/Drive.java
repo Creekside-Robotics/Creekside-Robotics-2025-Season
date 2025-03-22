@@ -18,6 +18,7 @@ public class Drive extends Command {
 
   private final Drivetrain swerveDrive;
   private final CommandJoystick joystick;
+  private double angularMultiplier = 1;
   private boolean fieldRelative = true;
 
   /**
@@ -49,14 +50,16 @@ public class Drive extends Command {
     if (joystick.button(3).getAsBoolean()) {
       DrivetrainConstants.maxVelocityMultiplier = -0.075;
       fieldRelative = false;
-    }else{
+      angularMultiplier = -1;
+    } else {
       DrivetrainConstants.maxVelocityMultiplier = (this.joystick.getThrottle()+1)/4;
       fieldRelative =  true;
+      angularMultiplier = 1;
     }
   
     SmartDashboard.putNumber("Velocity Multiplier", DrivetrainConstants.maxVelocityMultiplier);
 
-    this.swerveDrive.setModuleStates(xVelocity, yVelocity, angVelocity, fieldRelative);
+    this.swerveDrive.setModuleStates(xVelocity, yVelocity, angVelocity*angularMultiplier, fieldRelative);
   }
 
   // Called once the command ends or is interrupted.

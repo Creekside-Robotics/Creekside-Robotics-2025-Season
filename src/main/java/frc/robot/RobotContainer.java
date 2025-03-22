@@ -65,11 +65,11 @@ public class RobotContainer {
     this.driverController.button(2).whileTrue(new PickupCoral(elevator, arm, tilt));
     this.driverController.button(2).onFalse(new SetDefault(elevator, tilt));
   
-    //Score coral (Trigger, 11:L1&2, 12:L3)
+    //Score coral (Trigger: L1, 11:L2, 12:L3)
     this.driverController.button(1).whileTrue(new ScoreL1(elevator, arm, tilt));
     this.driverController.button(1).onFalse(new SetDefault(elevator, tilt));
 
-    this.driverController.button(11).whileTrue(new ScoreCoral(elevator, arm, tilt, ElevatorConstants.l1Score));
+    this.driverController.button(11).whileTrue(new ScoreCoral(elevator, arm, tilt, ElevatorConstants.l4Score));
     this.driverController.button(11).onFalse(new SetDefault(elevator, tilt));
     
     this.driverController.button(12).whileTrue(new ScoreCoral(elevator, arm, tilt, ElevatorConstants.l3Score));
@@ -100,5 +100,4 @@ public class RobotContainer {
     return new DriveAuto(drivetrain);
     // return new ParallelCommandGroup(new DriveAuto(drivetrain), new SequentialCommandGroup(new PickupCoral(elevator, arm, tilt), new SetDefault(elevator, tilt)));
   }
-
 }

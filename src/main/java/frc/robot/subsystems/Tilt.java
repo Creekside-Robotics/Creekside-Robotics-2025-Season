@@ -42,6 +42,7 @@ public class Tilt extends SubsystemBase {
 
   @Override
   public void periodic() {
+    this.setPosition(this.setpoint);
     SmartDashboard.putBoolean("Tilt At Setpoint", this.atTarget());
   }
 

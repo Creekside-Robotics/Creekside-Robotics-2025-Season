@@ -117,8 +117,8 @@ public final class Constants {
     public static double kS = 0.0;
 
     public static double l4Score = 135;
-    public static double tiltP = 0.1;
-    public static double tiltI = 0.013;
+    public static double tiltP = 0.15;
+    public static double tiltI = 0.02;
     public static double tiltD = 0.0;
 
     public static double posConversionFactor = 90 / 8.43;
@@ -133,7 +133,7 @@ public final class Constants {
     
     public static double maxPostition = 12.38; //Vertical inches from basepoint
 
-    public static double kP = 0.7;
+    public static double kP = 1.0;
     public static double kI = 0.25;
     public static double kD = 0.0;
 
@@ -141,10 +141,10 @@ public final class Constants {
     public static double kV = 0.0;
     
     // Position in Rotations
-    public static double l4Score = 12.6;
-    public static double l3Score = 2.0;
+    public static double l4Score = 11.6;
+    public static double l3Score = 3.3;
     public static double l2Score = 0;
-    public static double l1Score = 3.3;
+    public static double l1Score = 3.7;
 
     public static double intakePosition = 3.6;
 
