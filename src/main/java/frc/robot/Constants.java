@@ -133,8 +133,8 @@ public final class Constants {
     
     public static double maxPostition = 12.38; //Vertical inches from basepoint
 
-    public static double kP = 1.0;
-    public static double kI = 0.25;
+    public static double kP = 1.5;
+    public static double kI = 0.3;
     public static double kD = 0.0;
 
     public static double kS = 0.0;
@@ -142,7 +142,7 @@ public final class Constants {
     
     // Position in Rotations
     public static double l4Score = 11.6;
-    public static double l3Score = 3.3;
+    public static double l3Score = 4.0;
     public static double l2Score = 0;
     public static double l1Score = 3.7;
 

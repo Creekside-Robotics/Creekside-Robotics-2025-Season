@@ -46,6 +46,8 @@ public class Drivetrain extends SubsystemBase {
   public final SwerveModule m_backLeft = new SwerveModule(DeviceIds.bLSwerveDrive, DeviceIds.bLSwerveTurn, DeviceIds.bLEncoder);
   public final SwerveModule m_backRight = new SwerveModule(DeviceIds.bRSwerveDrive, DeviceIds.bRSwerveTurn, DeviceIds.bREncoder);
 
+  final SwerveModule[] modules = {this.m_frontLeft, this.m_frontRight, this.m_backLeft, this.m_backRight};
+
   private final ADIS16448_IMU gyro = new ADIS16448_IMU();
 
   private final SwerveDrivePoseEstimator poseEstimator;
@@ -78,12 +80,12 @@ public class Drivetrain extends SubsystemBase {
   @Override
   public void periodic() {
     this.poseEstimator.update(getGyroAngle(), getModulePositions());
-    this.updatePoseWithLimelight();
+    this.displayDrivetrainPose(this.poseEstimator.getEstimatedPosition());
+    this.updateOdometry();
+    // this.updatePoseWithLimelight();
   }
 
   public void setModuleStates(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
-    final SwerveModule[] modules = {this.m_frontLeft, this.m_frontRight, this.m_backLeft, this.m_backRight};
-
     final SwerveModuleState[] states =
         kinematics.toSwerveModuleStates(
             ChassisSpeeds.discretize( 
@@ -112,7 +114,10 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
+  // todo: Do this to use position tracking with odometry (Untested)
   private void displayDrivetrainPose(Pose2d pose) {
+    // pose = this.m_odometry.getPoseMeters();
+
     this.field2d.setRobotPose(pose);
     
     SmartDashboard.putData("Field Display", field2d);
