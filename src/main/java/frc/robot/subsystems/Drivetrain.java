@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -16,14 +17,16 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.ADIS16448_IMU;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import frc.robot.Constants.DeviceIds;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.utils.LimelightHelpers;
 import frc.robot.utils.LimelightHelpers.LimelightResults;
 
 public class Drivetrain extends SubsystemBase {
-  double baseLength = DrivetrainConstants.wheelBaseLength;
+  private final double baseLength = DrivetrainConstants.wheelBaseLength; //? why is this here?
 
   //? i think this should just be put in kinematics directly without declaring new variables, but who cares i guess (the garbage collector cares i guess)
   private final Translation2d frontLeftPosition = new Translation2d(baseLength/2, baseLength/2);
@@ -38,10 +41,12 @@ public class Drivetrain extends SubsystemBase {
     backRightPosition
   );
 
-  private final SwerveModule m_frontLeft = new SwerveModule(DeviceIds.fLSwerveDrive, DeviceIds.fLSwerveTurn, DeviceIds.fLEncoder);
-  private final SwerveModule m_frontRight = new SwerveModule(DeviceIds.fRSwerveDrive, DeviceIds.fRSwerveTurn, DeviceIds.fREncoder);
-  private final SwerveModule m_backLeft = new SwerveModule(DeviceIds.bLSwerveDrive, DeviceIds.bLSwerveTurn, DeviceIds.bLEncoder);
-  private final SwerveModule m_backRight = new SwerveModule(DeviceIds.bRSwerveDrive, DeviceIds.bRSwerveTurn, DeviceIds.bREncoder);
+  public final SwerveModule m_frontLeft = new SwerveModule(DeviceIds.fLSwerveDrive, DeviceIds.fLSwerveTurn, DeviceIds.fLEncoder);
+  public final SwerveModule m_frontRight = new SwerveModule(DeviceIds.fRSwerveDrive, DeviceIds.fRSwerveTurn, DeviceIds.fREncoder);
+  public final SwerveModule m_backLeft = new SwerveModule(DeviceIds.bLSwerveDrive, DeviceIds.bLSwerveTurn, DeviceIds.bLEncoder);
+  public final SwerveModule m_backRight = new SwerveModule(DeviceIds.bRSwerveDrive, DeviceIds.bRSwerveTurn, DeviceIds.bREncoder);
+
+  final SwerveModule[] modules = {this.m_frontLeft, this.m_frontRight, this.m_backLeft, this.m_backRight};
 
   private final ADIS16448_IMU gyro = new ADIS16448_IMU();
 
@@ -69,32 +74,26 @@ public class Drivetrain extends SubsystemBase {
       new Pose2d());
 
     SmartDashboard.putData("Field Display", field2d);
+    CameraServer.startAutomaticCapture();
   }
 
   @Override
   public void periodic() {
     this.poseEstimator.update(getGyroAngle(), getModulePositions());
-    this.updatePoseWithLimelight();
-    // SmartDashboard.putNumber("Current Rot:", m_frontLeft.getTurnPosRadians());
-    // SmartDashboard.putNumber("Desired Rot:", Math.toRadians(45));
-    // double volts = m_frontLeft.turnController.calculate(m_frontLeft.getTurnPosRadians(), Math.toRadians(45));
-    // SmartDashboard.putNumber("Voltage:", volts);
-    // SmartDashboard.putNumber("Error:", m_frontLeft.turnController.getError());
-
-    // DrivetrainConstants.angleKP = SmartDashboard.getNumber("p", 0);
-    // DrivetrainConstants.angleKI = SmartDashboard.getNumber("i", 0);
-    // DrivetrainConstants.angleKD = SmartDashboard.getNumber("d", 0);
+    this.displayDrivetrainPose(this.poseEstimator.getEstimatedPosition());
+    this.updateOdometry();
+    // this.updatePoseWithLimelight();
   }
 
   public void setModuleStates(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
-    SwerveModule[] modules = {this.m_frontLeft, this.m_frontRight, this.m_backLeft, this.m_backRight};
-
-    SwerveModuleState[] states =
+    final SwerveModuleState[] states =
         kinematics.toSwerveModuleStates(
             ChassisSpeeds.discretize( 
                 fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, getGyroAngle()) : new ChassisSpeeds(xSpeed, ySpeed, rot), DrivetrainConstants.periodTime));
 
-    modules[0].setDesiredState(states[0], true);
+    SmartDashboard.putNumber("AutoSpeed", states[0].speedMetersPerSecond);
+
+    modules[0].setDesiredState(states[0], false);
     modules[1].setDesiredState(states[1], false);
     modules[2].setDesiredState(states[2], false);
     modules[3].setDesiredState(states[3], false);
@@ -115,7 +114,10 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
+  // todo: Do this to use position tracking with odometry (Untested)
   private void displayDrivetrainPose(Pose2d pose) {
+    // pose = this.m_odometry.getPoseMeters();
+
     this.field2d.setRobotPose(pose);
     
     SmartDashboard.putData("Field Display", field2d);
@@ -151,5 +153,14 @@ public class Drivetrain extends SubsystemBase {
           m_backLeft.getPosition(),
           m_backRight.getPosition()
         });
+  }
+
+  // ----------- COMMANDS -----------
+  public Command commandResetGyro() {
+    return this.runOnce(() -> this.gyro.reset());
+  }
+
+  public Command forwardAuto(){
+    return this.run(() -> this.setModuleStates(0.5, 0, 0, true));
   }
 }

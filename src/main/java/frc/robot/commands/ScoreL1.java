@@ -7,13 +7,12 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Tilt;
 
-public class PickupCoral extends SequentialCommandGroup {
-    public PickupCoral(Elevator elevator, Arm arm, Tilt tilt) {
+public class ScoreL1 extends SequentialCommandGroup {
+    public ScoreL1(Elevator elevator, Arm arm, Tilt tilt) {
         arm.stop();
         addCommands(
-            new SetElevatorPosition(elevator, ElevatorConstants.intakePosition),
-            new SetTiltPosition(tilt, TiltConstants.intakePostition)
-            // arm.intakeCommand(),
+            new SetElevatorPosition(elevator, ElevatorConstants.l1Score),
+            new SetTiltPosition(tilt, TiltConstants.scoreL1Position)
         );
     }
 }

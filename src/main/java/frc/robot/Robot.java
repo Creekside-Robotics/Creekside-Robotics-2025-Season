@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
+
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
  * the TimedRobot documentation. If you change the name of this class or the package after creating
@@ -55,7 +56,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    //m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -65,7 +66,10 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    this.m_robotContainer.drivetrain.setModuleStates(2, 0, 0, true);
+    // System.out.println("Auto Cycle");
+  }
 
   @Override
   public void teleopInit() {
@@ -76,34 +80,11 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    // SmartDashboard.putNumber("P", 0.0);
-    // SmartDashboard.putNumber("I", 0.0);
-    // SmartDashboard.putNumber("D", 0.0);
-    // SmartDashboard.putBoolean("On?", false);
   }
 
-  // PIDController testController = new PIDController(0,0,0);
-  // SparkMax testMotor = new SparkMax(10, MotorType.kBrushless);
-  // SimpleMotorFeedforward driveFeedforward = new SimpleMotorFeedforward(0.001,0.1);
-
-
   /** This function is called periodically during operator control. */
-
   @Override
   public void teleopPeriodic() {
-    // double setpoint = 0.5;
-
-    // testController.setPID(SmartDashboard.getNumber("P", 0.0), SmartDashboard.getNumber("I", 0.0), SmartDashboard.getNumber("D", 0.0));
-
-    // if (SmartDashboard.getBoolean("On?", false)) {
-    //   double appliedVoltage = testController.calculate(testMotor.getEncoder().getVelocity(), setpoint) + driveFeedforward.calculate(setpoint);
-
-    //   testMotor.setVoltage(appliedVoltage);
-
-    // } else {
-    //   testMotor.setVoltage(0);
-    // }
-    // System.out.println(testMotor.getEncoder().getVelocity());
   }
 
   @Override
@@ -118,11 +99,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when the robot is first started up. */
   @Override
-  public void simulationInit() {
-  }
+  public void simulationInit() {}
   
   /** This function is called periodically whilst in simulation. */
   @Override
-  public void simulationPeriodic() {
-  }
+  public void simulationPeriodic() {}
 }

@@ -4,8 +4,18 @@
 
 package frc.robot;
 
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.commands.Drive;
+import frc.robot.commands.DriveAuto;
+import frc.robot.commands.PickupCoral;
+import frc.robot.commands.ScoreCoral;
+import frc.robot.commands.ScoreL1;
+import frc.robot.commands.SetDefault;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Tilt;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -17,11 +27,13 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
+  public final Drivetrain drivetrain = new Drivetrain();
+  private final Elevator elevator = new Elevator();
+  private final Arm arm = new Arm();
+  public final Tilt tilt = new Tilt();
 
-  private final Drivetrain drivetrain = new Drivetrain();  
-  private final CommandJoystick driverController =
-      new CommandJoystick(Constants.DeviceIds.driver1Port);
+  private final CommandJoystick driverController = new CommandJoystick(Constants.DeviceIds.driver1Port);
+  private final CommandJoystick backupController = new CommandJoystick(Constants.DeviceIds.driver2Port);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -40,15 +52,52 @@ public class RobotContainer {
    */
   private void configureBindings() {
     this.drivetrain.setDefaultCommand(new Drive(drivetrain, driverController));
+
+    //reset gyro
+    this.driverController.button(7).onTrue(drivetrain.commandResetGyro());
+    this.backupController.button(7).onTrue(drivetrain.commandResetGyro());
+
+    //reset tower
+    this.driverController.button(4).whileTrue(new SetDefault(elevator, tilt));
+    this.backupController.button(4).whileTrue(new SetDefault(elevator, tilt));
+
+    //intake coral
+    this.driverController.button(2).whileTrue(new PickupCoral(elevator, arm, tilt));
+    this.driverController.button(2).onFalse(new SetDefault(elevator, tilt));
+  
+    //Score coral (Trigger: L1, 11:L2, 12:L3)
+    this.driverController.button(1).whileTrue(new ScoreL1(elevator, arm, tilt));
+    this.driverController.button(1).onFalse(new SetDefault(elevator, tilt));
+
+    this.driverController.button(11).whileTrue(new ScoreCoral(elevator, arm, tilt, ElevatorConstants.l4Score));
+    this.driverController.button(11).onFalse(new SetDefault(elevator, tilt));
+    
+    this.driverController.button(12).whileTrue(new ScoreCoral(elevator, arm, tilt, ElevatorConstants.l3Score));
+    this.driverController.button(12).onFalse(new SetDefault(elevator, tilt));
+
+    //Intake and outtake coral
+    this.driverController.button(9).whileTrue(arm.intakeCommand());
+    this.driverController.button(10).whileTrue(arm.outtakeCommand());
+    this.backupController.button(9).whileTrue(arm.intakeCommand());
+    this.backupController.button(10).whileTrue(arm.outtakeCommand());
+
+
+    //Direct control arm
+    this.backupController.button(3).whileTrue(tilt.setManualTilt(true));
+    this.backupController.button(3).onFalse(tilt.setManualTilt(false));;
+    this.backupController.button(3).onFalse(new SetDefault(elevator, tilt));;
   }
+
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
-  // public Command getAutonomousCommand() {
-  //   // An example command will be run in autonomous
-  //   return Autos.exampleAuto(m_exampleSubsystem);
-  // }
+  public Command getAutonomousCommand() {
+    // An example command will be run in autonomous
+    return new DriveAuto(drivetrain);
+    // return new ParallelCommandGroup(new DriveAuto(drivetrain), new SequentialCommandGroup(new PickupCoral(elevator, arm, tilt), new SetDefault(elevator, tilt)));
+  }
 }
