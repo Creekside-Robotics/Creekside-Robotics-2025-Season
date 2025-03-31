@@ -101,11 +101,11 @@ public class Drivetrain extends SubsystemBase {
 
   public void updatePoseWithLimelight() {
     LimelightResults results = LimelightHelpers.getLatestResults("limelight");
-    if (results.targetingResults.valid && results.targetingResults.getBotPose2d_wpiBlue().getX() != 0) {
-      Pose2d pose = results.targetingResults.getBotPose2d_wpiBlue();
+    if (results.valid && results.getBotPose2d_wpiBlue().getX() != 0) {
+      Pose2d pose = results.getBotPose2d_wpiBlue();
 
-      double distance = results.targetingResults.botpose_avgdist;
-      double timestamp = results.targetingResults.timestamp_RIOFPGA_capture;
+      double distance = results.botpose_avgdist;
+      double timestamp = results.timestamp_RIOFPGA_capture;
 
       SmartDashboard.putNumber("Timestamp", timestamp);
       displayDrivetrainPose(pose);
